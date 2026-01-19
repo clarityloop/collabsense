@@ -1,0 +1,6 @@
+pandas
+aiohttp
+tqdm
+nest_asyncio
+faker
+python-dotenv
