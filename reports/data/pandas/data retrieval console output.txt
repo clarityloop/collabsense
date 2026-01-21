@@ -1,0 +1,51 @@
+# --- Configuration ---
+LTC_MIN_YEARS_ACTIVE = 2
+LTC_MIN_COMMENTS_QUALITY = 2
+
+
+Analyzing consistency over the last 2 years...
+Window: 2023-01-03 to 2026-01-03
+Found 62 users who have started a case EVERY year for the last 3 years.
+Final Long-Term Dataset Size: 18950 records.
+
+Generating CSVs with prefix ''...
+-> workspaces.csv created with 1 records.
+-> users.csv created with 62 records.
+-> workspace_members.csv created with 62 records.
+-> contexts.csv created with 1887 records.
+-> context_comments.csv created with 17063 records.
+-> Success! All files generated starting with ''.
+
+==================================================
+       LONG-TERM CONTRIBUTOR DATASET ANALYSIS
+==================================================
+
+--- Top 20 Consistent Users by Contribution & Engagement ---
+                                                   total_cases  avg_feedback_per_case  total_feedback_received
+author_username    author_email_fake                                                                          
+jorisvandenbossche jorisvandenbossche@example.com          140               4.835714                      677
+rhshadrach         rhshadrach@example.com                   98               4.357143                      427
+mroeschke          mroeschke@example.com                    76               3.460526                      263
+jbrockmendel       jbrockmendel@example.com                 72               4.652778                      335
+WillAyd            WillAyd@example.com                      56               5.678571                      318
+natmokval          natmokval@example.com                    40               3.425000                      137
+tuhinsharma121     tuhinsharma121@example.com               37               2.216216                       82
+datapythonista     datapythonista@example.com               37              10.540541                      390
+MarcoGorelli       MarcoGorelli@example.com                 30               5.633333                      169
+phofl              phofl@example.com                        30               3.566667                      107
+lithomas1          lithomas1@example.com                    30               6.466667                      194
+Dr-Irv             Dr-Irv@example.com                       27               6.814815                      184
+KevsterAmp         KevsterAmp@example.com                   22               4.318182                       95
+tqa236             tqa236@example.com                       17               4.294118                       73
+yuanx749           yuanx749@example.com                     15               2.800000                       42
+snitish            snitish@example.com                      14               3.714286                       52
+sfc-gh-mvashishtha sfc-gh-mvashishtha@example.com           14               3.500000                       49
+wjandrea           wjandrea@example.com                     11               3.909091                       43
+mattharrison       mattharrison@example.com                  9               5.555556                       50
+TomAugspurger      TomAugspurger@example.com                 9               4.777778                       43
+
+-> Saved detailed user stats to: stats_top_users_pandas-dev_pandas.csv
+
+--- Identifying 'Feedback-Only' Members ---
+Found 1 users who provided feedback but did not meet the consistency criteria.
+List: janosh

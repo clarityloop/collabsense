@@ -1,0 +1,4 @@
+Nodes: 197
+Edges: 442
+Density: 0.01144721848130115
+Reciprocity: 0.10407239819004525
