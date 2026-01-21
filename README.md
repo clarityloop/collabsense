@@ -1,8 +1,8 @@
 # CollabSense Data Gathering
 
-This repository contains the data pipeline used to mine, process, and anonymize collaboration data from open-source GitHub repositories for the CollabSense research project.
+Data pipeline used to scrape, process, and clean data from open-source GitHub repositories for the CollabSense research project.
 
-It features a robust **asynchronous scraper** with multi-token rate limit handling, a **processing engine** that generates specific datasets (Standard vs. Long-Term Contributors), and a **cleaning module** that anonymizes users with realistic synthetic identities.
+Uses an asynchronous scraper with multi-token rate limit handling, a processing engine that generates specific datasets to be used by the clarityloop platform.
 
 ## Project Structure
 
@@ -11,7 +11,7 @@ collab-sense-data-gathering/
 ├── src/
 │   ├── scraper.py     # Async GitHub scraper with token rotation
 │   ├── processor.py   # Filtering logic & CSV generation (Standard & LTC)
-│   ├── cleaner.py     # Anonymization & synthetic data generation
+│   ├── cleaner.py     # Synthetic data generation
 │   ├── pipeline.py    # Main orchestrator for the workflow
 │   └── config.py      # Configuration settings (Repo, Thresholds, Paths)
 ├── data/              # Output directory for all runs
@@ -23,8 +23,8 @@ collab-sense-data-gathering/
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-org/collab-sense-data-gathering.git
-    cd collab-sense-data-gathering
+    git clone https://github.com/clarityloop/collabsense.git
+    cd collabsense
     ```
 
 2.  **Install dependencies:**
@@ -41,7 +41,7 @@ collab-sense-data-gathering/
     # .env file
     GITHUB_TOKEN=ghp_yourPrimaryTokenHere...
     
-    # Optional: Add more tokens for heavy scraping
+    # Optional: Add more tokens for larger scrapes
     GITHUB_TOKEN_1=ghp_secondaryTokenHere...
     GITHUB_TOKEN_2=ghp_tertiaryTokenHere...
     ```
