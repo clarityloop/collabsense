@@ -2,6 +2,7 @@ import pandas as pd
 import argparse
 import os
 import glob
+import networkx as nx
 from src import config
 
 def load_latest_data():
@@ -15,23 +16,15 @@ def load_latest_data():
     return pd.read_csv(latest_file)
 
 def prepare_dataframe(raw_df):
-    """Common setup: datetime conversion and bot filtering."""
+    """Common setup: datetime conversion."""
     df = raw_df.copy()
     df['created_at'] = pd.to_datetime(df['created_at'], utc=True)
-
-    # bot filter
-    bot_pat = '|'.join(config.FILTER_BOT_KEYWORDS)
-    df = df[~df['author_username'].str.contains(bot_pat, case=False, na=False)]
-    
+    # Note: We do NOT filter bots here. They are needed for comment context.
     return df
 
 def export_clarityloop_files(df, raw_df, prefix=""):
     """
     Shared function to generate the 5 CSVs.
-    Args:
-        df: The filtered DataFrame to export.
-        raw_df: The original full DataFrame (needed for mapping parent URLs).
-        prefix: Optional prefix for filenames (e.g., 'ltc_').
     """
     if df.empty:
         print(f"Dataset empty. No files generated for prefix '{prefix}'.")
@@ -43,29 +36,35 @@ def export_clarityloop_files(df, raw_df, prefix=""):
     if 'author_email_fake' not in df.columns:
         df['author_email_fake'] = df['author_username'] + '@' + config.TARGET_EMAIL_DOMAIN
 
-    # 1. workspaces
-    ws = df[['workspace_name', 'workspace_title']].drop_duplicates().copy()
+    # --- BOT FILTERING (Selective) ---
+    # create a human-only view for Users/Members/Contexts
+    bot_pat = '|'.join(config.FILTER_BOT_KEYWORDS)
+    is_bot = df['author_username'].str.contains(bot_pat, case=False, na=False)
+    human_df = df[~is_bot]
+
+    # 1. workspaces (humans only)
+    ws = human_df[['workspace_name', 'workspace_title']].drop_duplicates().copy()
     ws['owner_email'] = f"owner@{config.TARGET_EMAIL_DOMAIN}"
     ws = ws.rename(columns={'workspace_title': 'title'})
     ws.to_csv(os.path.join(config.OUTPUT_DIR, f'{prefix}workspaces.csv'), index=False)
 
-    # 2. users
-    us = df[['author_full_name', 'author_email_fake']].drop_duplicates('author_email_fake').copy()
+    # 2. users (humans only)
+    us = human_df[['author_full_name', 'author_email_fake']].drop_duplicates('author_email_fake').copy()
     us = us.rename(columns={'author_full_name': 'name', 'author_email_fake': 'email'})
     us['gender'] = 'UNKNOWN'
     us['ethnicity'] = 'UNKNOWN'
     us.to_csv(os.path.join(config.OUTPUT_DIR, f'{prefix}users.csv'), index=False)
 
-    # 3. members
-    mem = df[['workspace_name', 'author_email_fake']].drop_duplicates().copy()
+    # 3. members (humans only)
+    mem = human_df[['workspace_name', 'author_email_fake']].drop_duplicates().copy()
     mem = mem.rename(columns={'author_email_fake': 'user_email'})
     mem['role'] = 'MEMBER'
     mem['title'] = 'Contributor'
     mem['manager_email'] = f"manager@{config.TARGET_EMAIL_DOMAIN}"
     mem.to_csv(os.path.join(config.OUTPUT_DIR, f'{prefix}workspace_members.csv'), index=False)
 
-    # 4. contexts (cases/PRs)
-    ctx = df[df['parent_id'].isna()].copy()
+    # 4. contexts (cases started by humans only)
+    ctx = human_df[human_df['parent_id'].isna()].copy()
     ctx = ctx.rename(columns={
         'author_email_fake': 'author_email', 'url': 'link', 'text_content': 'body',
         'author_username': 'user', 'collaborators_fake': 'collaborators'
@@ -77,9 +76,10 @@ def export_clarityloop_files(df, raw_df, prefix=""):
                 'user', 'description', 'body', 'author', 'content', 'key', 'reporter', 'collaborators']
     ctx[ctx_cols].to_csv(os.path.join(config.OUTPUT_DIR, f'{prefix}contexts.csv'), index=False)
 
-    # 5. comments
+    # 5. comments (INCLUDE BOTS - use full 'df')
     com = df[df['parent_id'].notna()].copy()
-    # create mapping from RAW dataframe to ensure we find parents even if parent was filtered out
+    
+    # mapping parent URLs
     parent_urls = raw_df.drop_duplicates('record_id').set_index('record_id')['url']
     
     com['context_link'] = com['parent_id'].map(parent_urls)
@@ -104,10 +104,14 @@ def print_stats(final_df):
 
     if final_df.empty: return
 
-    # top users
+    # exclude bots for stats calculation to see real human engagement
+    bot_pat = '|'.join(config.FILTER_BOT_KEYWORDS)
+    human_df = final_df[~final_df['author_username'].str.contains(bot_pat, case=False, na=False)]
+
+    # Top Users
     print("\n--- Top 20 Users by Contribution & Engagement ---")
-    case_feedback = final_df[final_df['parent_id'].notna()].groupby('thread_id').size().reset_index(name='fb_count')
-    cases = final_df[final_df['parent_id'].isna()].merge(case_feedback, on='thread_id', how='left').fillna(0)
+    case_feedback = human_df[human_df['parent_id'].notna()].groupby('thread_id').size().reset_index(name='fb_count')
+    cases = human_df[human_df['parent_id'].isna()].merge(case_feedback, on='thread_id', how='left').fillna(0)
 
     user_richness = cases.groupby(['author_username', 'author_email_fake']).agg(
         total_cases=('thread_id', 'count'),
@@ -116,23 +120,14 @@ def print_stats(final_df):
     ).sort_values(by='total_cases', ascending=False)
     
     print(user_richness.head(20).to_string())
-
-    # feedback only
-    print("\n--- 'Feedback-Only' Members ---")
-    all_authors = set(final_df['author_username'].unique())
-    case_starters = set(final_df[final_df['parent_id'].isna()]['author_username'].unique())
-    fb_only = list(all_authors - case_starters)
-    
-    print(f"Count: {len(fb_only)}")
-    if fb_only: print(f"Sample: {', '.join(sorted(fb_only)[:20])}...")
     print("\n" + "="*50)
 
 
-# Pipeline 1: standard filtering
+# pipeline 1: standard filtering
 def run_standard_pipeline(raw_df):
     print("\n--- Running STANDARD Pipeline ---")
     
-    # 1. common prep (datetime & bots)
+    # 1. common prep
     df = prepare_dataframe(raw_df)
 
     # 2. time filter
@@ -159,11 +154,11 @@ def run_standard_pipeline(raw_df):
     export_clarityloop_files(final_df, raw_df, prefix="")
     print_stats(final_df)
 
-# Pipeline 2: LTC filtering 
+# pipeline 2: LTC filtering 
 def run_ltc_pipeline(raw_df):
     print("\n--- Running LONG-TERM CONTRIBUTOR Pipeline ---")
     
-    # 1. common prep (datetime & bots)
+    # 1. common prep
     df = prepare_dataframe(raw_df)
 
     # 2. identify consistent users
@@ -175,7 +170,11 @@ def run_ltc_pipeline(raw_df):
 
     print(f"Checking consistency for {config.LTC_MIN_YEARS_ACTIVE} years...")
     
-    for username, group in case_starters.groupby('author_username'):
+    # We only check consistency for HUMANS, so filter bots temporarily for this check
+    bot_pat = '|'.join(config.FILTER_BOT_KEYWORDS)
+    human_case_starters = case_starters[~case_starters['author_username'].str.contains(bot_pat, case=False, na=False)]
+
+    for username, group in human_case_starters.groupby('author_username'):
         is_consistent = True
         for i in range(config.LTC_MIN_YEARS_ACTIVE):
             w_end = latest_date - pd.DateOffset(years=i)
@@ -191,6 +190,7 @@ def run_ltc_pipeline(raw_df):
     print(f"Found {len(consistent_users)} consistent users.")
 
     # 3. filter data
+    # Keep records where author is consistent user OR is a comment on their thread
     ltc_df = df[df['author_username'].isin(consistent_users)].copy()
     ltc_df = ltc_df[ltc_df['created_at'] > cutoff_date]
 
@@ -204,9 +204,104 @@ def run_ltc_pipeline(raw_df):
     export_clarityloop_files(final_df, raw_df, prefix="ltc_")
     print_stats(final_df)
 
+# pipeline 3: interaction density filtering
+def run_dense_pipeline(raw_df):
+    print("\n--- Running DENSITY CLIQUE Pipeline ---")
+    
+    # 1. Prep
+    df = prepare_dataframe(raw_df)
+    
+    # 2. Build the Interaction Graph
+    print("Building interaction graph...")
+    
+    # We only care about comments to build the graph (who talks to whom)
+    comments = df[df['type'] == 'comment'].copy()
+    
+    # Map comments back to thread author
+    case_starters = df[df['type'].isin(['issue_body', 'pull_request_body'])]
+    thread_author_map = case_starters.set_index('thread_id')['author_username'].to_dict()
+    
+    comments['recipient'] = comments['thread_id'].map(thread_author_map)
+    comments = comments.dropna(subset=['recipient'])
+    
+    # Filter out self-talk
+    comments = comments[comments['author_username'] != comments['recipient']]
+    
+    # Filter out BOT interactions for the graph (we want human density)
+    bot_pat = '|'.join(config.FILTER_BOT_KEYWORDS)
+    comments = comments[~comments['author_username'].str.contains(bot_pat, case=False, na=False)]
+    comments = comments[~comments['recipient'].str.contains(bot_pat, case=False, na=False)]
+
+    # Create Graph
+    G = nx.Graph()
+    for _, row in comments.iterrows():
+        sender = row['author_username']
+        recipient = row['recipient']
+        if G.has_edge(sender, recipient):
+            G[sender][recipient]['weight'] += 1
+        else:
+            G.add_edge(sender, recipient, weight=1)
+            
+    print(f"Human Graph: {G.number_of_nodes()} users, {G.number_of_edges()} connections.")
+    
+    # 3. Apply K-Core Decomposition
+    TARGET_TEAM_SIZE = 50
+    best_k = 0
+    core_nodes = []
+    
+    for k in range(1, 100):
+        try:
+            core = nx.k_core(G, k=k)
+            num_nodes = core.number_of_nodes()
+            if num_nodes == 0: break
+            
+            best_k = k
+            core_nodes = list(core.nodes())
+            
+            if num_nodes <= TARGET_TEAM_SIZE: break
+        except: break
+            
+    print(f"Selected k-core: k={best_k} (Each user interacts with at least {best_k} others)")
+    print(f"Artificial Team Size: {len(core_nodes)} users")
+    
+    if len(core_nodes) > 0:
+        subgraph = G.subgraph(core_nodes)
+        density = nx.density(subgraph)
+        print(f"Artificial Team Density: {density:.2%} (Target: >30%)")
+
+    # 4. Filter the Dataset
+    # Keep records where the AUTHOR is in the core_nodes list
+    # AND include bot comments if they belong to these threads
+    
+    # First, find the threads started by the core team
+    core_threads_df = case_starters[case_starters['author_username'].isin(core_nodes)].copy()
+
+    # apply hard cap if set
+    if config.DENSITY_MAX_CONTEXTS_PER_USER > 0:
+        print(f"Applying cap: Max {config.DENSITY_MAX_CONTEXTS_PER_USER} contexts per user...")
+        # Sort by date descending (newest first)
+        core_threads_df = core_threads_df.sort_values('created_at', ascending=False)
+        # Take top N per author
+        core_threads_df = core_threads_df.groupby('author_username').head(config.DENSITY_MAX_CONTEXTS_PER_USER)
+    
+    core_thread_ids = core_threads_df['thread_id']
+
+    # Select all records belonging to these threads
+    dense_df = df[df['thread_id'].isin(core_thread_ids)].copy()
+    
+    # 5. Quality Control
+    comments = dense_df[dense_df['type'] == 'comment']
+    valid_threads = comments.groupby('thread_id').size()
+    valid_ids = valid_threads[valid_threads >= config.FILTER_MIN_COMMENTS_PER_CASE].index
+    
+    final_df = dense_df[dense_df['thread_id'].isin(valid_ids)].copy()
+
+    export_clarityloop_files(final_df, raw_df, prefix="dense_")
+    print_stats(final_df)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process ClarityLoop Datasets")
-    parser.add_argument('--mode', choices=['standard', 'ltc', 'all'], default='all', help="Which pipeline to run")
+    parser.add_argument('--mode', choices=['standard', 'ltc', 'dense', 'all'], default='all', help="Which pipeline to run")
     args = parser.parse_args()
 
     raw_data = load_latest_data()
@@ -216,3 +311,6 @@ if __name__ == "__main__":
     
     if args.mode in ['ltc', 'all']:
         run_ltc_pipeline(raw_data)
+        
+    if args.mode in ['dense', 'all']:
+        run_dense_pipeline(raw_data)

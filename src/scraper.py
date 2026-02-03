@@ -153,11 +153,13 @@ async def fetch_paginated_async(session, start_url, max_pages=0, desc="Fetching"
             if 'next' in links:
                 url = links['next']['url']
                 page_count += 1
-                if pbar: pbar.update(1)
+                if pbar is not None: 
+                    pbar.update(1)
             else:
                 break
     finally:
-        if pbar: pbar.close()
+        if pbar is not None: 
+            pbar.close()
     return all_items
 
 async def get_user_full_name_async(session, username):

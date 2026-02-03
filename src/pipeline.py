@@ -28,7 +28,7 @@ def main():
     parser.add_argument('--clean', action='store_true', help="Run Cleaner")
     
     # --- CONFIGURATION ARGS ---
-    parser.add_argument('--mode', choices=['standard', 'ltc', 'all'], default='all', help="Processing mode (Standard/LTC)")
+    parser.add_argument('--mode', choices=['standard', 'ltc', 'dense', 'all'], default='all', help="Processing mode")
     
     # --- INPUT HANDLING ---
     parser.add_argument('--input-file', type=str, help="Path to an existing _FINAL.csv (for Processing step)")
@@ -96,6 +96,9 @@ def main():
         
         if args.mode in ['ltc', 'all']:
             processor.run_ltc_pipeline(raw_data)
+
+        if args.mode in ['dense', 'all']:
+            processor.run_dense_pipeline(raw_data)
 
         # pass this directory to the cleaner
         args.input_dir = run_dir

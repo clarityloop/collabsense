@@ -39,11 +39,12 @@ def fix_collaborators(row):
         return ''
 
     try:
-        domain = str(row['author_email']).split('@')[1]
+        domain = config.TARGET_EMAIL_DOMAIN
     except IndexError:
-        domain = "github.com"
+        domain = "example.com"
 
     cleaned_emails = []
+    
     for u in raw_collabs.split(','):
         u = u.strip()
         if not u: continue
@@ -76,6 +77,8 @@ def clean_dataset_group(prefix=""):
     user_path = os.path.join(config.OUTPUT_DIR, f'{prefix}users.csv')
     if os.path.exists(user_path):
         df = pd.read_csv(user_path)
+
+        df['email'] = df['email'].astype(str).apply(lambda x: x.split('@')[0] + '@' + config.TARGET_EMAIL_DOMAIN)
         
         # set demographics
         genders = ['MALE', 'FEMALE']
@@ -96,6 +99,8 @@ def clean_dataset_group(prefix=""):
     mem_path = os.path.join(config.OUTPUT_DIR, f'{prefix}workspace_members.csv')
     if os.path.exists(mem_path):
         df = pd.read_csv(mem_path)
+        df['user_email'] = df['user_email'].astype(str).apply(lambda x: x.split('@')[0] + '@' + config.TARGET_EMAIL_DOMAIN)
+        df['manager_email'] = f"manager@{config.TARGET_EMAIL_DOMAIN}"
         df['role'] = df['role'].fillna('MEMBER')
         df.to_csv(mem_path, index=False)
         print(f"-> {prefix}workspace_members.csv verified.")
@@ -112,6 +117,10 @@ def main():
     # Check for LTC files
     if os.path.exists(os.path.join(config.OUTPUT_DIR, 'ltc_users.csv')):
         clean_dataset_group(prefix="ltc_")
+
+    # Check for Dense files (NEW)
+    if os.path.exists(os.path.join(config.OUTPUT_DIR, 'dense_users.csv')):
+        clean_dataset_group(prefix="dense_")
         
     print("\nPost-processing complete.")
 
