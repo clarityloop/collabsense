@@ -1,0 +1,30 @@
+~/clarityloop/collabsense/data/kubernetes-kubernetes_SCRAPE_2026-02-05_12-41-29$ python strict_dataset.py 
+Loading data from: ./github_kubernetes_kubernetes_FINAL.csv
+Time Filter (48 mo): Kept 352413 rows after 2022-02-08
+
+--- Phase 1: Identifying Core Team (K-Core) ---
+Graph Nodes (Active Users): 1636
+Selected K-Core: k=13
+Core Team Identified: 22 users
+
+--- Phase 2: Applying Strict Interaction Filter ---
+Final Dataset: 12099 rows
+
+--- Calculating Final Dataset Density ---
+Final Nodes: 22
+Final Edges: 175
+FINAL INTERACTION DENSITY: 75.76% (Target > 30%)
+[PASS] Dataset is Enterprise Grade.
+
+--- Phase 3: Cleaning & Exporting ---
+Generating Users...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_users.csv
+Generating Contexts...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_contexts.csv
+Generating Comments...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_context_comments.csv
+
+--- Verification ---
+Users: 22
+Comments: 10084
+[SUCCESS] Pure Dataset. 100% of commenters are known users.

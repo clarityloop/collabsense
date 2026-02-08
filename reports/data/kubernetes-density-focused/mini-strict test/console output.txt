@@ -1,0 +1,55 @@
+~/clarityloop/collabsense/data/kubernetes-kubernetes_SCRAPE_2026-02-05_12-41-29$ python strict_dataset.py 
+Loading data from: ./github_kubernetes_kubernetes_FINAL.csv
+Time Filter (24 mo): Kept 169463 rows after 2024-02-08
+
+--- Phase 1: Identifying Core Team (K-Core) ---
+Graph Nodes (Active Users): 777
+Selected K-Core: k=8
+Core Team Identified: 35 users
+
+--- Phase 2: Applying Strict Interaction Filter ---
+Final Dataset: 8356 rows
+
+--- Calculating Final Dataset Density ---
+Final Nodes: 35
+Final Edges: 209
+FINAL INTERACTION DENSITY: 35.13% (Target > 30%)
+[PASS] Dataset is Enterprise Grade.
+
+--- Phase 3: Cleaning & Exporting ---
+Generating Users...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_users.csv
+Generating Contexts...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_contexts.csv
+Generating Comments...
+-> Saved: ./data/kubernetes-kubernetes_PROCESS_STRICT/strict_context_comments.csv
+
+--- Verification ---
+Users: 35
+Comments: 7016
+[SUCCESS] Pure Dataset. 100% of commenters are known users.
+
+
+
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+17:54:53.022 [main] INFO  com.clarityloop.environment.Runner - Users (37) provisioned
+17:54:53.270 [main] INFO  com.clarityloop.environment.Runner - Workspaces (1) provisioned
+17:54:55.565 [main] INFO  com.clarityloop.environment.Runner - Workspace members provisioned
+17:55:38.171 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14174 author=4_huww98@example.com from 8210 to 6000 chars
+17:55:43.235 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14469 author=4_hirazawaui@example.com from 13595 to 6000 chars
+17:55:43.807 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14469 author=4_hirazawaui@example.com from 32434 to 6000 chars
+17:55:43.860 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14469 author=4_hirazawaui@example.com from 13980 to 6000 chars
+17:55:50.133 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14369 author=4_dims@example.com from 17119 to 6000 chars
+17:55:50.322 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14382 author=4_dims@example.com from 10358 to 6000 chars
+17:55:59.117 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14548 author=4_p0lyn0mial@example.com from 8580 to 6000 chars
+17:56:02.173 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14725 author=4_hirazawaui@example.com from 9739 to 6000 chars
+17:56:04.972 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14754 author=4_hirazawaui@example.com from 8025 to 6000 chars
+17:56:06.095 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14661 author=4_hshiina@example.com from 6689 to 6000 chars
+17:56:06.750 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14671 author=4_dims@example.com from 62980 to 6000 chars
+17:56:08.392 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14745 author=4_hirazawaui@example.com from 18357 to 6000 chars
+17:56:13.227 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14769 author=4_dims@example.com from 10584 to 6000 chars
+17:56:16.449 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14881 author=4_249043822@example.com from 13226 to 6000 chars
+17:56:16.512 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14863 author=4_anishshah@example.com from 6725 to 6000 chars
+17:56:16.754 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14894 author=4_gjkim42@example.com from 7657 to 6000 chars
+17:56:23.615 [main] WARN  c.c.environment.ContextProvisioner - Truncated context comment for contextId=14997 author=4_dims@example.com from 13152 to 6000 chars
+17:56:35.979 [main] INFO  com.clarityloop.environment.Runner - Contexts provisioned

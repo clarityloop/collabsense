@@ -1,0 +1,47 @@
+[SETUP] Processing Input: data/kubernetes-kubernetes_SCRAPE_2026-01-27_04-08-54/github_kubernetes_kubernetes_FINAL.csv
+[SETUP] Output Directory: ./data/kubernetes-kubernetes_PROCESS_2026-01-28_13-13-23
+
+--- Running DENSITY CLIQUE Pipeline ---
+Building interaction graph...
+Human Graph: 6747 users, 18898 connections.
+Selected k-core: k=29 (Each user interacts with at least 29 others)
+Artificial Team Size: 55 users
+Artificial Team Density: 53.60% (Target: >30%)
+Applying cap: Max 50 contexts per user...
+
+Generating CSVs with prefix 'dense_'...
+-> dense_workspaces.csv: 1
+-> dense_users.csv: 421
+-> dense_workspace_members.csv: 421
+-> dense_contexts.csv: 2644
+-> dense_context_comments.csv: 28571
+
+==================================================
+       DATASET RICHNESS ANALYSIS
+==================================================
+
+--- Top 20 Users by Contribution & Engagement ---
+                                             total_cases  avg_feedback  total_feedback
+author_username author_email_fake                                                     
+andrewsykim     andrewsykim@kubernetes.com            50      3.780000           189.0
+aveshagarwal    aveshagarwal@kubernetes.com           50      6.100000           305.0
+deads2k         deads2k@kubernetes.com                50      2.620000           131.0
+freehan         freehan@kubernetes.com                50      3.080000           154.0
+gnufied         gnufied@kubernetes.com                50      4.540000           227.0
+dixudx          dixudx@kubernetes.com                 50      5.140000           257.0
+jingxu97        jingxu97@kubernetes.com               50      3.640000           182.0
+krmayankk       krmayankk@kubernetes.com              50      8.340000           417.0
+lavalamp        lavalamp@kubernetes.com               50      6.460000           323.0
+luxas           luxas@kubernetes.com                  50      3.080000           154.0
+msau42          msau42@kubernetes.com                 50      4.880000           244.0
+spiffxp         spiffxp@kubernetes.com                50      5.220000           261.0
+mwielgus        mwielgus@kubernetes.com               50      2.020000           101.0
+shyamjvs        shyamjvs@kubernetes.com               50      5.140000           257.0
+sjenning        sjenning@kubernetes.com               50      4.700000           235.0
+jsafrane        jsafrane@kubernetes.com               50      4.600000           230.0
+k82cn           k82cn@kubernetes.com                  50      5.620000           281.0
+jianglingxia    jianglingxia@kubernetes.com           50      4.720000           236.0
+karlkfi         karlkfi@kubernetes.com                50      4.900000           245.0
+ixdy            ixdy@kubernetes.com                   49      6.020408           295.0
+
+==================================================
