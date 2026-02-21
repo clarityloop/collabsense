@@ -8,13 +8,15 @@ Uses an asynchronous scraper with multi-token rate limit handling, a processing 
 
 ```text
 collab-sense-data-gathering/
+collab-sense-data-gathering/
+├── dataset/           # All compiled growth signal results
+├── reports/           # Results and pre-analysis datasets
 ├── src/
 │   ├── scraper.py     # Async GitHub scraper with token rotation
 │   ├── processor.py   # Filtering logic & CSV generation (Standard & LTC)
 │   ├── cleaner.py     # Synthetic data generation
 │   ├── pipeline.py    # Main orchestrator for the workflow
 │   └── config.py      # Configuration settings (Repo, Thresholds, Paths)
-├── data/              # Output directory for all runs
 ├── .env               # API Secrets (Not committed)
 └── requirements.txt   # Python dependencies
 ```

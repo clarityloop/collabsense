@@ -1,6 +1,5 @@
 # Data output
 /data/
-*.csv
 *.sql
 
 # Environment Variables
