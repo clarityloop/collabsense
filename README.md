@@ -8,7 +8,6 @@ Uses an asynchronous scraper with multi-token rate limit handling, a processing 
 
 ```text
 collab-sense-data-gathering/
-collab-sense-data-gathering/
 ├── dataset/           # All compiled growth signal results
 ├── reports/           # Results and pre-analysis datasets
 ├── src/
