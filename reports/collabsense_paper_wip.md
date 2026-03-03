@@ -6,10 +6,10 @@
 
 ---
 
-## 1. Executive Summary
+## 1. Abstract
 > *Brief overview of the project. Highlight the successful deployment of the ClarityLoop engine on public open-source data. Emphasize the model's high accuracy in mapping sentiment and identifying positive "Strengths." Summarize how combining an "Individual Signal" (medium) prompt with engineered "Artificial Density" successfully allowed the engine to generate accurate "Growth Opportunities."*
 
-## 2. Introduction & Objective
+## 2. Introduction
 > *Define the ClarityLoop engine's primary purpose (Enterprise behavioral coaching). State the research goal: testing the transferability of the AI to asynchronous, open-source environments (Pandas and Kubernetes). Establish that open-source code reviews are being used as a proxy for enterprise peer reviews.*
 
 ## 3. Literature Review
