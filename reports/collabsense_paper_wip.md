@@ -10,7 +10,18 @@
 > *Brief overview of the project. Highlight the successful deployment of the ClarityLoop engine on public open-source data. Emphasize the model's high accuracy in mapping sentiment and identifying positive "Strengths." Summarize how combining an "Individual Signal" (medium) prompt with engineered "Artificial Density" successfully allowed the engine to generate accurate "Growth Opportunities."*
 
 ## 2. Introduction
-> *Define the ClarityLoop engine's primary purpose (Enterprise behavioral coaching). State the research goal: testing the transferability of the AI to asynchronous, open-source environments (Pandas and Kubernetes). Establish that open-source code reviews are being used as a proxy for enterprise peer reviews.*
+## 2. Introduction & Objective
+
+The ClarityLoop AI engine is designed to function as an automated behavioral coach within enterprise environments. By analyzing daily workplace communications - such as peer-to-peer feedback, code reviews, and direct messaging - the engine identifies a team "Sentiment Score", highlights individual "Strengths", and surfaces actionable "Growth Opportunities" (constructive coaching moments) for employees. 
+
+Historically, tools of this nature are optimized for the dense, hierarchical communication topologies typical of traditional corporate teams. The primary objective of this research is to evaluate the transferability of the ClarityLoop engine to the asynchronous, decentralized, and highly technical environment of Open Source Software (OSS) development. 
+
+Specifically, this study uses public GitHub pull requests and issue comments from massive open-source repositories (`pandas-dev/pandas` and `kubernetes/kubernetes`) as a proxy for internal enterprise peer reviews. Open-source collaboration provides a massive, high-quality dataset of professional engineering interactions, making it an ideal stress-test for the AI's pattern-recognition capabilities.
+
+This research seeks to answer three core questions:
+1. **Sentiment Transferability:** Can an enterprise-tuned AI accurately interpret the tone and intent of open-source technical debates without hallucinating negativity or toxic behavior?
+2. **Behavioral Recognition:** Can the engine distinguish between transactional code corrections (e.g., syntax fixes) and genuine behavioral coaching moments (e.g., communication style, collaboration, and leadership)?
+3. **Structural Adaptability:** What prompt tuning and data-engineering techniques are required to overcome the inherent "sparsity" of open-source social graphs to successfully trigger the engine's Growth Opportunity algorithms?
 
 ## 3. Literature Review
 > *Review existing research to establish the baseline of what has been done in this field.*
@@ -25,13 +36,39 @@
 > *Research comparing the social graphs of traditional companies (dense, hierarchical) versus open-source projects (sparse, transactional, "drive-by" contributions). How does this structural difference affect AI analysis?*
 
 ## 4. Methodology & Data Engineering
-> *Detail the pipeline used to gather, clean, and process the data before feeding it to the AI.*
+
+The methodology for this study required building a custom Python data pipeline (`clarityloop/collabsense/src`) to extract, filter, and transform public GitHub interactions into a format that the ClarityLoop engine could process. 
+
+Because the AI is designed to analyze internal corporate communications, feeding it raw open-source data directly would not yield accurate results. The pipeline was broken into three main stages: asynchronous data mining using the GitHub API, logic-based filtering to isolate valuable interactions, and data anonymization to simulate a corporate environment.
 
 ### 4.1 Dataset Selection & Anonymization
-> *Explain the choice of `pandas-dev/pandas` and `kubernetes/kubernetes`. Mention the use of Faker to anonymize users and simulate a private enterprise workspace.*
+
+Two major open-source repositories were selected for this study: `pandas-dev/pandas` and `kubernetes/kubernetes`. These projects were chosen because of their massive scale, strict professional review standards, and highly active maintainer communities. These characteristics make them the closest available public proxy to a large, professional software engineering department.
+
+**Filtering for Quality**
+To ensure the AI was evaluating meaningful peer-to-peer feedback, strict filters were applied during the data ingestion phase:
+* **Bot Removal:** Open-source repositories rely heavily on automation. The pipeline stripped out all interactions from known bots (e.g., accounts containing `[bot]`, `-bot`, or `bot-`) to guarantee the AI only analyzed human behavior.
+* **Long-Term Contributor Focus:** To replicate the dynamics of permanent employees, we implemented tenure and activity filters. For the baseline Pandas dataset, we filtered for users who had been consistently active over extended periods (ranging from 6 months up to 5 consecutive years, depending on the test) and who met minimum thresholds for participating in pull requests and issues. This effectively removed one-time "drive-by" contributors, leaving only the core community.
+
+**Anonymization and Workspace Simulation**
+The ClarityLoop engine expects data formatted for a private enterprise organization. To adapt the public GitHub data, an anonymization module was built using the Python `Faker` library. 
+
+This module systematically replaced all real GitHub usernames and public identities with synthetic profiles. It generated realistic fake names, corporate email addresses, user roles, and profile avatars. By mapping the filtered GitHub pull requests and comments to these synthetic profiles, we successfully generated clean, relational datasets (`users.csv`, `contexts.csv`, and `context_comments.csv`) that perfectly mirrored the structure of a private enterprise workspace. This allowed the engine to process the open-source data exactly as it would for a corporate client.
 
 ### 4.2 Engineering "Artificial Density" (K-Core)
-> *Explain the mathematical approach to solving open-source sparsity. Detail the use of K-Core decomposition to find the "Densest Subgraph" (e.g., the 55-person core Kubernetes team) to artificially recreate an Enterprise Department topology.*
+
+The main challenge in applying enterprise AI to public repositories is the structural "sparsity" of open-source networks. While corporate teams interact with the same peers repeatedly (high density), open-source contributors often interact with dozens of strangers for single, transactional code merges. Initial tests on the Pandas repository revealed an interaction density of just 1.1%. Because the ClarityLoop engine relies on recognizing recurring behavioral patterns between peers, this sparse environment failed to trigger the Growth Opportunity algorithms.
+
+**K-Core Decomposition & Strict Filtering**
+To simulate an enterprise environment, the pipeline was upgraded to use **K-Core decomposition** on the Kubernetes repository. This graph algorithm identifies the "densest subgraph" of users who frequently interact with each other. 
+
+However, because these maintainers act as public gatekeepers, capturing their entire comment history inadvertently pulled in thousands of external interactions, plummeting the network density to 0.2%. To fix this, we implemented a strict peer-to-peer allow-list: the pipeline deleted any comment where the sender or recipient was outside the identified core group. 
+
+This filtering strategy successfully stripped away the transactional "noise" of the public repository. The resulting isolated datasets achieved enterprise-grade internal densities ranging from 35% to 75%, creating the exact topology required to stress-test the AI.
+
+![Network Density Graph](./data/kubernetes-density-focused/network_density_graph.png)
+
+![Core Team Graph](./data/kubernetes-density-focused/core_team_graph.png)
 
 ## 5. Baseline Success & The Sparsity Challenge
 > *Focus on the initial `Pandas_LongTerm` run. Highlight the major successes first, then explain the structural hurdle.*
@@ -57,7 +94,7 @@
 ## 7. Engineering Success: The Kubernetes Run
 > *Detail the results of the "Artificial Density" data-engineering solution combined with the balanced prompt.*
 
-### 7.1 Achieving Enterprise-Grade Signal Yields
+### 7.1 Unlocking Growth Opportunities Through Density
 > *Show that by increasing network density (35%+) and utilizing the balanced "Individual Signal" prompt, the AI successfully triggered accurate GOs (e.g., the K8s_Artificial_Dense 4.6% yield). This proves the engine works when the data structure matches enterprise density and the prompt is properly tuned.*
 > `[INSERT KUBERNETES NETWORK GRAPH HERE]`
 
