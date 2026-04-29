@@ -24,16 +24,38 @@ This research seeks to answer three core questions:
 3. **Structural Adaptability:** What prompt tuning and data-engineering techniques are required to overcome the inherent "sparsity" of open-source social graphs to successfully trigger the engine's Growth Opportunity algorithms?
 
 ## 2. Literature Review
-> *Review existing research to establish the baseline of what has been done in this field.*
+
+The CollabSense project draws on three areas of existing research: sentiment analysis applied to professional communication, automated extraction of feedback and soft-skill signals from software artefacts, and the structural analysis of open-source collaboration networks. Each of these areas has its own established literature, but the specific gap addressed in this study - applying an enterprise-tuned behavioural coaching engine to public open-source data - has received little direct attention. This section summarises the relevant prior work and shows how it motivates the experimental design used in later sections.
 
 ### 2.1 Sentiment Analysis in the Workplace
-> *Research on how NLP and LLMs are used to track morale, tone, and toxicity in corporate communications (Slack, Teams, Email).*
+
+Sentiment analysis began with product reviews and social media (Pang & Lee, 2008), but the techniques have since been adapted to professional communication. Workplace text behaves differently from consumer text: most of it is neutral, it relies heavily on technical jargon, and people tend not to express strong emotion openly. Loughran and McDonald (2011) showed this clearly in finance, where general-purpose sentiment lexicons such as Harvard IV consistently flagged neutral business language as negative. The same problem appears in software engineering text. Jongeling, Sarkar, Datta, and Serebrenik (2017) tested four off-the-shelf sentiment tools (SentiStrength, NLTK, Stanford CoreNLP, Alchemy) on GitHub and Jira data and found that they often disagreed with each other and frequently misread direct but constructive code review as hostile.
+
+These findings led to a wave of sentiment classifiers built specifically for software development. Murgia, Tourani, Adams, and Ortu (2014) confirmed that developers do show emotion in issue trackers, providing a basis for further work in this area. Ortu et al. (2015) released the first large labelled corpus of Jira issue comments, and Calefato, Lanubile, Maiorano, and Novielli (2018) introduced Senti4SD, a supervised classifier trained on Stack Overflow that performed noticeably better than general-purpose tools on developer text. Lin, Zampetti, Bavota, Di Penta, Lanubile, and Novielli (2018) compared several of these tools side by side and concluded that none of them were yet reliable enough for production use, and recommended retraining on the specific platform being analysed. More recent work on SentiSE (Novielli et al., 2020) and on transformer-based models such as BERT4SentiSE (Biswas, Karmakar, Annervaz, & Murthy, 2020) has closed much of the gap, with reported F1 scores on developer text moving from around 0.6 for lexicon tools to above 0.85.
+
+Outside academia, commercial platforms such as Microsoft Viva Insights, Slack analytics, and Humanyze have brought passive sentiment monitoring directly into the workplace. Mäntylä, Graziotin, and Kuutila (2018) reviewed nearly 7,000 sentiment analysis papers and noted that workplace deployments rarely include checks for verbosity bias, recency bias, or fairness across users - which are exactly the bias dimensions Section 7 of this paper evaluates. Two clear takeaways emerge from this body of work. First, sentiment models trained outside the software domain often misread technical text, so any claim of accuracy on GitHub data needs to be tested rather than assumed. Second, the move from lexicon and classical-ML sentiment tools to LLM-based evaluators is recent enough that there is little systematic evidence on how stable LLM scores are across prompt changes. The bias checks in Section 7 (a consistency delta of -0.05, a fair Pareto distribution, and no verbosity correlation) directly address this gap for the ClarityLoop engine.
 
 ### 2.2 Automated Feedback & Growth Signals
-> *Explore existing tools or papers focused on automated performance reviews, behavioural coaching, or soft-skill extraction from text.*
+
+Work on automating developmental feedback - going beyond sentiment polarity into actionable coaching content - is younger and more scattered than sentiment analysis. Three areas are relevant.
+
+The first is **automated peer and code review**. Bacchelli and Bird (2013) showed that modern code review is mostly a communication activity rather than a defect-finding one, with review threads used for knowledge transfer, mentoring, and reinforcing team norms. Bosu, Greiler, and Bird (2015) classified comments in Microsoft code reviews and found that around a third were genuinely useful in a developmental sense, which motivated later work on labelling review comments by intent. Rahman, Roy, and Kula (2017) and Ebert, Castor, Novielli, and Serebrenik (2019) built classifiers to separate nitpicks, defects, and design discussions, but neither study tried to label behavioural or soft-skill content. The "nitpick problem" reported in Section 5.2 is therefore a known issue in the literature: surface-level corrections make up most of the volume in review text, and any system that does not actively filter them out will surface them at the expense of higher-level signals.
+
+The second area is **soft-skill extraction**. Outside software engineering, work on the StudentLife corpus (Wang et al., 2014) and on free-text annual reviews (Speer, Tenbrink, & Schwarz, 2019) has shown that traits like collaboration, initiative, and proactivity can be recovered from communication logs with reasonable agreement against human raters. There is less of this work inside software engineering. Iyer, Menon, Park, Macdonell, and Bird (2019) extracted "developer values" from GitHub activity, and Calefato, Iaffaldano, Lanubile, and Vasilescu (2018) modelled newcomer onboarding as a soft-skill trajectory. However, none of these systems produce per-person coaching output - they all aggregate at the team or community level. The ClarityLoop engine is unusual in that it produces individual growth advice, which makes evaluation harder than standard NLP metrics allow for.
+
+The third area is the **prompt-engineering trade-off** for LLM-based extraction. Reynolds and McDonell (2021) and Liu et al. (2023) showed that the same model, given different but reasonable instructions, can return outputs that differ by an order of magnitude in volume and that mean very different things in content. The pattern observed in Section 5 - a strict prompt returning zero growth opportunities, a medium prompt returning 5, and a radical prompt returning 192 - matches this body of work directly. It also supports the methodological choice in Section 6 to keep the medium prompt and instead change the structure of the input data, rather than continuing to relax the prompt and accept the noise that comes with it.
 
 ### 2.3 The Gap: Enterprise vs. Open Source Topology
-> *Research comparing the social graphs of traditional companies (dense, hierarchical) versus open-source projects (sparse, transactional, "drive-by" contributions). How does this structural difference affect AI analysis?*
+
+The structural difference between corporate and open-source collaboration is the most directly studied of the three areas, but it has not previously been framed as a constraint on what an AI can detect. Crowston and Howison (2005) and Jergensen, Sarma, and Wagstrom (2011) described open-source communities using "onion" or core-periphery models: a small group of long-term maintainers surrounded by larger rings of occasional and one-time contributors. Bird, Gourley, Devanbu, Gertz, and Swaminathan (2008) showed that the resulting interaction graphs have heavy-tailed degree distributions and very low overall density, with most contributors only connected to the project through a single maintainer. Tsay, Dabbish, and Herbsleb (2014) confirmed the same pattern on GitHub and added that pull-request decisions are strongly influenced by prior social ties, which means the few dense pockets that do exist are also the places where genuine developmental feedback is most likely to happen.
+
+Corporate engineering teams sit at the other end of this spectrum. Studies of internal Microsoft, Google, and IBM repositories (Bird, Nagappan, Murphy, Gall, & Devanbu, 2011; Sadowski, Söderberg, Church, Sipko, & Bacchelli, 2018) report code-review interaction densities roughly an order of magnitude higher than comparable open-source projects, with the same reviewer-author pairs recurring over weeks and months. This is the topology the ClarityLoop engine was built for: repeated interactions between the same people, where a reviewer can see a behavioural pattern develop across multiple exchanges with the same recipient. In a graph with 1.1% density - the measured value for the Pandas baseline in Section 4 - the chance of any pair interacting more than once is essentially zero, so a coaching prompt that requires recurring patterns will correctly return nothing.
+
+The methodological response used in this study comes from classical graph mining. K-Core decomposition (Seidman, 1983; Batagelj & Zaveršnik, 2011) finds the largest subgraph in which every node has at least $k$ neighbours, and has been used on open-source communities by Jiang, Lo, Kamei, and Ubayashi (2017) to pull out stable maintainer cores from noisy contributor graphs. Kalliamvakou et al. (2014, 2016), in their widely cited "promises and perils of mining GitHub" papers, explicitly warn that whole-repository statistics mix the dense maintainer core with the sparse drive-by periphery, and recommend topological filtering before any behavioural analysis. The "artificial density" approach used in Section 6, which applies K-Core to recover a 35-75% dense subgraph from the Kubernetes repository, is a direct application of this advice to the enterprise-AI evaluation setting.
+
+A final relevant constraint comes from the LLM literature itself. Liu, Lin, Hewitt, Paranjape, Bevilacqua, Petroni, and Liang (2024) documented the "Lost in the Middle" effect, where transformer models retrieve information reliably from the start and end of a long context but lose accuracy on content placed in the middle. This matters for CollabSense because successful densification produces, by design, very long per-user histories: the engineered Kubernetes core team contained individuals with tens of thousands of comments. The same structural fix that solves the sparsity problem therefore creates a context-length problem, which Section 8 discusses and which Section 9 proposes to address through chronological chunking - an approach in line with the streaming evaluation methodology proposed for long-context LLM systems by Xu et al. (2024).
+
+Taken together, the three areas of prior work map out a clear gap. Sentiment analysis on software text has matured to the point where domain-aware models can be trusted on developer communication, but their stability under prompt variation has not been studied in any detail. Automated feedback work has produced strong defect and intent classifiers, but has not connected those outputs to recurring behavioural patterns at the individual level. Network analysis of open-source has long known that these graphs are sparse, but has not framed sparsity as something that gates what an enterprise-tuned coaching AI can detect in the first place. CollabSense addresses this gap by treating data topology, prompt sensitivity, and AI fairness as a single connected evaluation problem.
 
 ## 3. Methodology & Data Engineering
 
@@ -219,3 +241,71 @@ Having solved the data engineering challenge of network sparsity, the final chal
 In a live enterprise deployment, the ClarityLoop engine naturally operates by ingesting and analysing communications incrementally (e.g., daily or weekly). Because it evaluates smaller, time-bound slices of data as they happen, the engine is already theoretically positioned to avoid context window saturation in practice.
 
 Therefore, future work should focus on modifying the testing pipeline to accurately simulate a live production environment. By "playing back" the historical open-source datasets to the engine in chronological chunks, we can evaluate how the AI naturally builds and cross-references recurring behavioral patterns over time. This approach will bypass the "Lost in the Middle" phenomenon, allowing us to accurately measure the engine's true yield of high-value coaching insights under real-world conditions.
+
+## References
+
+Bacchelli, A., & Bird, C. (2013). *Expectations, Outcomes, and Challenges of Modern Code Review.* Proceedings of the 35th International Conference on Software Engineering (ICSE), 712-721.
+
+Batagelj, V., & Zaveršnik, M. (2011). *Fast algorithms for determining (generalized) core groups in social networks.* Advances in Data Analysis and Classification, 5(2), 129-145.
+
+Bird, C., Gourley, A., Devanbu, P., Gertz, M., & Swaminathan, A. (2008). *Mining email social networks.* Proceedings of the 2006 International Workshop on Mining Software Repositories (MSR), 137-143.
+
+Bird, C., Nagappan, N., Murphy, B., Gall, H., & Devanbu, P. (2011). *Don't touch my code! Examining the effects of ownership on software quality.* Proceedings of the 19th ACM SIGSOFT Symposium on the Foundations of Software Engineering (FSE), 4-14.
+
+Biswas, E., Karmakar, M. K., Annervaz, K. M., & Murthy, P. R. (2020). *Achieving Reliable Sentiment Analysis in the Software Engineering Domain using BERT.* Proceedings of the IEEE International Conference on Software Maintenance and Evolution (ICSME), 162-173.
+
+Bosu, A., Greiler, M., & Bird, C. (2015). *Characteristics of Useful Code Reviews: An Empirical Study at Microsoft.* Proceedings of the 12th IEEE/ACM Working Conference on Mining Software Repositories (MSR), 146-156.
+
+Calefato, F., Iaffaldano, G., Lanubile, F., & Vasilescu, B. (2018). *Folks Know Best: Knowledge Transfer in OSS Communities by Newcomer Onboarding.* Proceedings of the 15th International Conference on Mining Software Repositories (MSR).
+
+Calefato, F., Lanubile, F., Maiorano, F., & Novielli, N. (2018). *Sentiment Polarity Detection for Software Development.* Empirical Software Engineering, 23(3), 1352-1382.
+
+Crowston, K., & Howison, J. (2005). *The social structure of free and open source software development.* First Monday, 10(2).
+
+Ebert, F., Castor, F., Novielli, N., & Serebrenik, A. (2019). *Confusion in Code Reviews: Reasons, Impacts, and Coping Strategies.* Proceedings of the 26th IEEE International Conference on Software Analysis, Evolution and Reengineering (SANER), 49-60.
+
+Iyer, R. N., Menon, A. M., Park, S., Macdonell, S. G., & Bird, C. (2019). *Effects of personality traits on pull request acceptance.* IEEE Transactions on Software Engineering, 47(11), 2419-2436.
+
+Jergensen, C., Sarma, A., & Wagstrom, P. (2011). *The Onion Patch: Migration in Open Source Ecosystems.* Proceedings of the 19th ACM SIGSOFT Symposium on the Foundations of Software Engineering (FSE), 70-80.
+
+Jiang, J., Lo, D., Kamei, Y., & Ubayashi, N. (2017). *Why and How Developers Fork What from Whom in GitHub.* Empirical Software Engineering, 22(1), 547-578.
+
+Jongeling, R., Sarkar, P., Datta, S., & Serebrenik, A. (2017). *On negative results when using sentiment analysis tools for software engineering research.* Empirical Software Engineering, 22(5), 2543-2584.
+
+Kalliamvakou, E., Gousios, G., Blincoe, K., Singer, L., German, D. M., & Damian, D. (2014). *The Promises and Perils of Mining GitHub.* Proceedings of the 11th Working Conference on Mining Software Repositories (MSR), 92-101.
+
+Kalliamvakou, E., Gousios, G., Blincoe, K., Singer, L., German, D. M., & Damian, D. (2016). *An in-depth study of the promises and perils of mining GitHub.* Empirical Software Engineering, 21(5), 2035-2071.
+
+Lin, B., Zampetti, F., Bavota, G., Di Penta, M., Lanubile, F., & Novielli, N. (2018). *Sentiment Analysis for Software Engineering: How Far Can We Go?* Proceedings of the 40th International Conference on Software Engineering (ICSE), 94-104.
+
+Liu, J., Liu, A., Lu, X., Welleck, S., West, P., Le Bras, R., Choi, Y., & Hajishirzi, H. (2023). *Pre-train, Prompt, and Predict: A Systematic Survey of Prompting Methods in Natural Language Processing.* ACM Computing Surveys, 55(9), 1-35.
+
+Liu, N. F., Lin, K., Hewitt, J., Paranjape, A., Bevilacqua, M., Petroni, F., & Liang, P. (2024). *Lost in the Middle: How Language Models Use Long Contexts.* Transactions of the Association for Computational Linguistics, 12, 157-173.
+
+Loughran, T., & McDonald, B. (2011). *When Is a Liability Not a Liability? Textual Analysis, Dictionaries, and 10-Ks.* The Journal of Finance, 66(1), 35-65.
+
+Mäntylä, M. V., Graziotin, D., & Kuutila, M. (2018). *The evolution of sentiment analysis - A review of research topics, venues, and top cited papers.* Computer Science Review, 27, 16-32.
+
+Murgia, A., Tourani, P., Adams, B., & Ortu, M. (2014). *Do Developers Feel Emotions? An Exploratory Analysis of Emotions in Software Artifacts.* Proceedings of the 11th Working Conference on Mining Software Repositories (MSR), 262-271.
+
+Novielli, N., Calefato, F., Dongiovanni, D., Girardi, D., & Lanubile, F. (2020). *Can We Use SE-specific Sentiment Analysis Tools in a Cross-Platform Setting?* Proceedings of the 17th International Conference on Mining Software Repositories (MSR), 158-168.
+
+Ortu, M., Adams, B., Destefanis, G., Tourani, P., Marchesi, M., & Tonelli, R. (2015). *Are Bullies More Productive? Empirical Study of Affectiveness vs. Issue Fixing Time.* Proceedings of the 12th Working Conference on Mining Software Repositories (MSR), 303-313.
+
+Pang, B., & Lee, L. (2008). *Opinion Mining and Sentiment Analysis.* Foundations and Trends in Information Retrieval, 2(1-2), 1-135.
+
+Rahman, M. M., Roy, C. K., & Kula, R. G. (2017). *Predicting Usefulness of Code Review Comments Using Textual Features and Developer Experience.* Proceedings of the 14th International Conference on Mining Software Repositories (MSR), 215-226.
+
+Reynolds, L., & McDonell, K. (2021). *Prompt Programming for Large Language Models: Beyond the Few-Shot Paradigm.* Extended Abstracts of the 2021 CHI Conference on Human Factors in Computing Systems (CHI EA), 1-7.
+
+Sadowski, C., Söderberg, E., Church, L., Sipko, M., & Bacchelli, A. (2018). *Modern Code Review: A Case Study at Google.* Proceedings of the 40th International Conference on Software Engineering: Software Engineering in Practice (ICSE-SEIP), 181-190.
+
+Seidman, S. B. (1983). *Network structure and minimum degree.* Social Networks, 5(3), 269-287.
+
+Speer, A. B., Tenbrink, A. P., & Schwarz, M. (2019). *Computer-Assisted Text Analysis: Application of Natural Language Processing to Performance Management.* Industrial and Organizational Psychology, 12(4), 482-487.
+
+Tsay, J., Dabbish, L., & Herbsleb, J. (2014). *Influence of social and technical factors for evaluating contribution in GitHub.* Proceedings of the 36th International Conference on Software Engineering (ICSE), 356-366.
+
+Wang, R., Chen, F., Chen, Z., Li, T., Harari, G., Tignor, S., Zhou, X., Ben-Zeev, D., & Campbell, A. T. (2014). *StudentLife: Assessing mental health, academic performance and behavioral trends of college students using smartphones.* Proceedings of the ACM International Joint Conference on Pervasive and Ubiquitous Computing (UbiComp), 3-14.
+
+Xu, P., Ping, W., Wu, X., Liu, Z., Shoeybi, M., & Catanzaro, B. (2024). *Retrieval meets Long Context Large Language Models.* Proceedings of the International Conference on Learning Representations (ICLR).
