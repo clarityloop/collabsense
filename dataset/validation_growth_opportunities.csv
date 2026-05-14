@@ -1,0 +1,60 @@
+Sample_ID,Test_Config,Person,Engine_Label (Growth Opportunity),Sentiment_Score,Source_Comment (read this),GitHub_Link,RATER_NAME,Q1_Actionable_Feedback (Yes/Partial/No),Q2_Genuine_Growth_Area (Yes/Partial/No),Q3_Based_On_Evidence (Yes/Partial/No),Q4_Notes (optional)
+GRO-001,Pandas_Prompt_B_Radical,5_ewouth@example.com,Clarify error investigation process,,,,,,,,
+GRO-002,Pandas_Prompt_B_Radical,5_frbelotto@example.com,Clarify problem statements and examples,6.0,"Sorry @frbelotto - I am not following. It would be helpful if you proposed an example call to `json_normalize`, the desired output, and how this differs from my proposed solution. || > I do not really fell safe that each partition/output are kept on the original order (because of the parallel running)
+
+> If I could just keep and id/column of the original dataframe
+
+These two seem to be in conflict to me. If the original DataFrame has columns with row order that match, then my solution above will",https://github.com/pandas-dev/pandas/issues/60272#issuecomment-2466791673 || https://github.com/pandas-dev/pandas/issues/60272#issuecomment-2466787558,,,,,
+GRO-003,Pandas_Prompt_B_Radical,5_warwickmm@example.com,Clarify expectations for edge cases,7.0,"My above comments are only regarding Python's `None` when stored in an object-dtype column or Series.  || That seems like the correct behavior to me - yes. || @rhshadrach - Any ideas for a fix? do we raise an error when ""<"" is used between Series that contains None? || Thanks for the report - it seems to me comparing `None` to e.g. integers should raise. My guess is that `x > y` succeeding is a result of assuming `None` is an NA value and hence behaves like `np.nan` (always false for comparisons",https://github.com/pandas-dev/pandas/issues/59418#issuecomment-2274400055 || https://github.com/pandas-dev/pandas/issues/59418#issuecomment-2274368816 || https://github.com/pandas-dev/pandas/issues/59418#issuecomment-2272872859 || https://github.com/pandas-dev/pandas/issues/59418#issuecomment-2269903224,,,,,
+GRO-004,Pandas_Prompt_B_Radical,5_batterseapower@example.com,Ensure correctness in workaround implementations,7.0,"@batterseapower thanks for the report!
+
+That indeed seems to be a place where we don't have full support for extension dtypes. Looking at the implementation of the `factorize` method, I suppose this is because we don't have a custom implementation for MultiIndex, but use the base one that passes `self._values` to the factorize algorithm:
+
+https://github.com/pandas-dev/pandas/blob/cc40732889b59d0ebd867b087691f02221e5666c/pandas/core/base.py#L1288-L1295
+
+For a Series or simple Index, the `_values`",https://github.com/pandas-dev/pandas/issues/62337#issuecomment-3289625828,,,,,
+GRO-005,K8s_Strict_Large,8_saad-ali@example.com,Enhance debugging and testing practices,,"Looking through [csi_plugin.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/volume/csi/csi_plugin.go#L52), I see that somewhat recently, `csiTimeout` was changed from 15sec to 2min. This could explain why I've noticed in some clusters, very rarely attachments even happening after a while (if there is indeed throttling). Trying to reproduce these issues in 1.14.8, I have noticed that attachments are more likely to succeed, although still very slow when a lot of activity has taken pla",https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544800700 || https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544793896,,,,,
+GRO-006,Pandas_Prompt_B_Radical,5_lesteve@example.com,Improve clarity in technical explanations,,,,,,,,
+GRO-007,Pandas_Prompt_B_Radical,5_morotti@example.com,Propose actionable solutions for unsupported features,,"Thanks for the report. I don't believe pandas supports float128 in indexes. @jbrockmendel @mroeschke - should we? If not, we should likely raise a better error message here.",https://github.com/pandas-dev/pandas/issues/59826#issuecomment-2357278276,,,,,
+GRO-008,K8s_Strict_Large,8_saad-ali@example.com,Optimize API usage for scalability,,"Looking through [csi_plugin.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/volume/csi/csi_plugin.go#L52), I see that somewhat recently, `csiTimeout` was changed from 15sec to 2min. This could explain why I've noticed in some clusters, very rarely attachments even happening after a while (if there is indeed throttling). Trying to reproduce these issues in 1.14.8, I have noticed that attachments are more likely to succeed, although still very slow when a lot of activity has taken pla",https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544800700 || https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544793896,,,,,
+GRO-009,Pandas_Prompt_B_Radical,5_vignesh14052002@example.com,Consider performance impacts of changes,5.5,"> I dont't understand why this was added, but reverting solves the below issue
+
+The commit message was ""memoize objects when reading from file to reduce memory footprint"".  So removing it will likely balloon memory footprint.  Instead of removing it, might be more effective to just check for 0, 1, True, False explicitly and let other values be memoized? || Perf impact? This is here for a reason.",https://github.com/pandas-dev/pandas/pull/62226#issuecomment-3246261619 || https://github.com/pandas-dev/pandas/pull/62226#issuecomment-3240307984,,,,,
+GRO-010,Pandas_LongTerm,1_ylink-lfs@example.com,Avoid premature assignment of approvers,4.0,@ylink-lfs please stop assigning to approvers before there are any lgtm applied.,https://github.com/kubernetes/kubernetes/pull/132534#issuecomment-3081416878,,,,,
+GRO-011,Pandas_Prompt_A_Individual,4_aram-cedarwood@example.com,Avoid force-pushing after reviews,,"> [aram-cinnamon](https://github.com/aram-cinnamon) [force-pushed](https://github.com/pandas-dev/pandas/compare/70e71f76692e7c1e0ea429a6c94de99f632611b2..55fe96bc2ab4a69d3486d97b790b7ff41a95245c) the groupby-then-resample-if-index-out-of-order branch from[ 70e71f7 ](https://github.com/pandas-dev/pandas/commit/70e71f76692e7c1e0ea429a6c94de99f632611b2)to 55fe96b
+
+@aram-cinnamon - not sure if you're aware, but once a review has been done, force-pushing means that reviewers need to review the entire",https://github.com/pandas-dev/pandas/pull/59408#issuecomment-2303049925,,,,,
+GRO-012,Pandas_Prompt_B_Radical,5_randolf-scholz@example.com,Clarify and align on design decisions,,"@RihanC - NumPy scalars come in more dtypes than Python offers. I imagine converting to Python will be lossy, and therefore have some odd edge cases. It doesn't seem to me like that is the correct approach. || > but using this choice consistently throughout the API seems desirable.
+
+Right - I'm not sure how well this is supported throughout pandas. You mentioned `clip`, but there are a number of other methods that take scalars like this I think. It seem to me the next steps are to determine whic",https://github.com/pandas-dev/pandas/issues/59053#issuecomment-3591637697 || https://github.com/pandas-dev/pandas/issues/59053#issuecomment-2184075818 || https://github.com/pandas-dev/pandas/issues/59053#issuecomment-2179623335 || https://github.com/pandas-dev/pandas/issues/59053#issuecomment-2179493421,,,,,
+GRO-013,Pandas_Prompt_B_Radical,5_ssche@example.com,Ensure compatibility with external libraries,7.0,"Thanks @ssche - agreed that appears to be it. Further investigations and PRs to fix are welcome! || Thanks for the report, I am not able to get the example working on pandas 2.1.1. Can you post the environment details where you get this working?
+
+<details>
+<summary>Versions</summary>
+
+```
+INSTALLED VERSIONS
+------------------
+commit              : e86ed377639948c64c429059127bcf5b359ab6be
+python              : 3.11.11.final.0
+python-bits         : 64
+OS                  : Linux
+OS-release        ",https://github.com/pandas-dev/pandas/issues/60611#issuecomment-2564715448 || https://github.com/pandas-dev/pandas/issues/60611#issuecomment-2564341206,,,,,
+GRO-014,K8s_Artificial_Dense,8_saad-ali@example.com,Clarify feature gate deprecation process,,"I think we actually need to lock to default, and the deprecate for 2 releases before removing. Will send an update.",https://github.com/kubernetes/kubernetes/pull/105090#issuecomment-931560205,,,,,
+GRO-015,Pandas_Prompt_B_Radical,5_lesteve@example.com,Streamline communication in PR reviews,,,,,,,,
+GRO-016,Pandas_Prompt_B_Radical,5_willayd@example.com,Improve test coverage and reliability,7.0,Thanks @WillAyd  || @WillAyd could you add a `peakmem` ASV benchmark for this case?,https://github.com/pandas-dev/pandas/pull/57084#issuecomment-1912520599 || https://github.com/pandas-dev/pandas/pull/57084#issuecomment-1912413550,,,,,
+GRO-017,K8s_Artificial_Dense,8_saad-ali@example.com,Optimize API usage for scalability,,"Looking through [csi_plugin.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/volume/csi/csi_plugin.go#L52), I see that somewhat recently, `csiTimeout` was changed from 15sec to 2min. This could explain why I've noticed in some clusters, very rarely attachments even happening after a while (if there is indeed throttling). Trying to reproduce these issues in 1.14.8, I have noticed that attachments are more likely to succeed, although still very slow when a lot of activity has taken pla",https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544800700 || https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544793896,,,,,
+GRO-018,Pandas_Prompt_B_Radical,5_tolker-ku@example.com,Evaluate user-facing impact of changes,4.0,"Thanks for the PR, but agreed that I'm not sure this maintenance burden of this new implementation is worth the minimal speedup. Thanks for the effort here but closing || > I've benchmarked the current pure Python implementation against two different Cython versions with the following results.
+
+Is there anything user-facing that would be improved by this? I see the performance improvements in the benchmarks you posted, but being down in the range of nanoseconds I'm unsure if its worth the added ",https://github.com/pandas-dev/pandas/pull/59565#issuecomment-2445280458 || https://github.com/pandas-dev/pandas/pull/59565#issuecomment-2323065028,,,,,
+GRO-019,Pandas_Prompt_B_Radical,5_yuanx749@example.com,Address stale pull requests promptly,5.0,"Thanks for the pull request, but it appears to have gone stale. If interested in continuing, please merge in the main branch, address any review comments and/or failing tests, and we can reopen.",https://github.com/pandas-dev/pandas/pull/58418#issuecomment-2374940628 || https://github.com/pandas-dev/pandas/pull/57193#issuecomment-2173837350,,,,,
+GRO-020,Pandas_Prompt_B_Radical,5_jorisvandenbossche@example.com,Clarify error messages for invalid operations,,"Thanks @jorisvandenbossche, I didn't realize conversion was a NumPy behavior. Should we be unifying the behavior between NumPy-backed (converting & raising ValueError on failure) and EA-backed (no attempt to convert & raising TypeError)? || Very nice! I believe in the ValueError cases pandas is trying to convert in setitem.
+
+```python
+data = Index(np.arange(5), dtype=""int64"")
+data.array[0] = ""1""
+print(data)
+# Index([1, 1, 2, 3, 4], dtype='int64')
+```
+
+Some of the TypeError cases are also a resul",https://github.com/pandas-dev/pandas/issues/60218#issuecomment-2463294929 || https://github.com/pandas-dev/pandas/issues/60218#issuecomment-2460384925,,,,,

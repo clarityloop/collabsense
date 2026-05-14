@@ -1,0 +1,121 @@
+Sample_ID,Test_Config,Sender,Recipient,Engine_Sentiment_Score (0-10),Source_Comment (read this),GitHub_Link,RATER_NAME,Q1_Your_Sentiment_Score (0-10),Q2_Engine_Score_Reasonable (Yes/Close/No),Q3_Notes (optional)
+SEN-001,Pandas_Prompt_A_Individual,4_willayd@example.com,4_simonjayhawkins@example.com,7.0,"> I've had discussions with @WillAyd when reviewing the pandas cookbook related to the future direction of pandas which is not clear without approved PDEPs and roadmap items. The cookbook promotes the pandas nullable dtypes as pandas preferred approach but I'm sure Will would have preferred to use the ArrowDTypes in the examples. Will, be sure to correct me if i'm in any way misinterpreting/misrepresenting you.
+
+Kind of...I ultimately just wanted to teach people a way that they could easily and ",https://github.com/pandas-dev/pandas/pull/61599#issuecomment-2959059575,,,,
+SEN-002,Pandas_LongTerm,1_snitish@example.com,1_simonaubertbd@example.com,,Any thoughts on this @rhshadrach? I concur with OP that this feature would be helpful in cases where the grouping columns are dynamically determined. ,https://github.com/pandas-dev/pandas/issues/61160#issuecomment-2746620514,,,,
+SEN-003,Pandas_LongTerm,3_dr-irv@example.com,3_jbrockmendel@example.com,8.0,"Not able to judge the implementation, but I'm +1 on the concept.",https://github.com/pandas-dev/pandas/pull/61732#issuecomment-3098108655,,,,
+SEN-004,K8s_Strict_Large,2_msau42@example.com,2_axezhan@example.com,,"/lgtm
+/approve",https://github.com/kubernetes/kubernetes/pull/127590#issuecomment-2414802558,,,,
+SEN-005,Pandas_LongTerm,3_mroeschke@example.com,3_rhshadrach@example.com,,Thanks @rhshadrach ,https://github.com/pandas-dev/pandas/pull/62954#issuecomment-3487820556,,,,
+SEN-006,K8s_Artificial_Dense,7_mikedanese@example.com,7_lavalamp@example.com,,/lgtm,https://github.com/kubernetes/kubernetes/pull/83797#issuecomment-545578498,,,,
+SEN-007,Pandas_Prompt_B_Radical,5_datapythonista@example.com,5_rhshadrach@example.com,5.0,"Seems like the label `PDEP` can only be used for the PDEP themselves. Otherwise building the website fails, as it expects the PR to be a PDEP that needs to be rendered in the roadmap.",https://github.com/pandas-dev/pandas/pull/61468#issuecomment-2896021106,,,,
+SEN-008,Pandas_Prompt_B_Radical,5_jbrockmendel@example.com,5_ssche@example.com,,"We are recursing because extract_array is not getting called on the ""where"" entry of **kwargs.  Getting this right in The General Case is a very hard problem.  i.e. in this particular case we could do `kwargs[""where""] = extract_array(kwargs[""where""], extract_numpy=True)`, but if the Series passed happened to be not-aligned that would give silently-incorrect results.
+
+Properly dealing with kwargs is why implementing `__array_function__` never got off the ground.",https://github.com/pandas-dev/pandas/issues/60611#issuecomment-3016837156,,,,
+SEN-009,Pandas_Prompt_B_Radical,5_mroeschke@example.com,5_lysnikolaou@example.com,8.0,Thanks @lysnikolaou and @lithomas1 ,https://github.com/pandas-dev/pandas/pull/59065#issuecomment-2187761035,,,,
+SEN-010,Pandas_LongTerm,3_rhshadrach@example.com,3_agriyakhetarpal@example.com,7.0,"I'm +1 on giving this another go.
+
+> maintain the shell if it's added and establish some relevant automations towards its upkeep.
+
+What is the expected maintenance / upkeep?
+
+> I'd like to propose reinstating this shell for the website (either on the same page, or elsewhere
+
+Getting Started seems to be a natural place to me.",https://github.com/pandas-dev/pandas/issues/60747#issuecomment-2606090958,,,,
+SEN-011,Pandas_Prompt_B_Radical,5_rhshadrach@example.com,5_mattharrison@example.com,,"I do not think I necessarily agree with the expectation. A DataFrame has columns, a Series does not, and from a very abstract perspective, it seems odd to perform column selection on a Series. But I do see there is value in using expressions in `Series.loc`.
+
+Two other things to note: Polars also does not support this, and I think the implementation would not be very straightforward (but I haven't taken an in-depth look).
+
+In any case, there was never any intention in pandas 3.0 for this to work",https://github.com/pandas-dev/pandas/issues/63277#issuecomment-3618698133,,,,
+SEN-012,Pandas_Prompt_B_Radical,5_ewouth@example.com,5_lysnikolaou@example.com,8.0,"Awesome!
+
+Can we expect Python 3.13 support on the Pandas 2.x series, or will it be exclusive to 3.0?",https://github.com/pandas-dev/pandas/pull/59136#issuecomment-2244251908,,,,
+SEN-013,K8s_Strict_Large,1_apelisse@example.com,1_alexzielenski@example.com,,"/approve
+
+Let's squash some of these commits, and also giving a chance for other people to take a look.",https://github.com/kubernetes/kubernetes/pull/113146#issuecomment-1301600543,,,,
+SEN-014,Pandas_Prompt_B_Radical,5_mroeschke@example.com,5_jorisvandenbossche@example.com,6.0,Thanks @jorisvandenbossche ,https://github.com/pandas-dev/pandas/pull/60454#issuecomment-2568289956,,,,
+SEN-015,Pandas_LongTerm,1_rhshadrach@example.com,1_yasirroni@example.com,,Thanks for the report. Can you include what output you currently get and the output you expect to get.,https://github.com/pandas-dev/pandas/issues/59876#issuecomment-2369922344,,,,
+SEN-016,Pandas_LongTerm,3_mroeschke@example.com,3_jbrockmendel@example.com,,"```bash
+mypy.....................................................................Failed
+- hook id: mypy
+- duration: 83.98s
+- exit code: 1
+
+pandas/core/internals/concat.py:443: error: Incompatible return value type (got ""tuple[dtype[Any] | ExtensionDtype, dtype[Any] | ExtensionDtype]"", expected ""dtype[Any] | ExtensionDtype"")  [return-value]
+Found 1 error in 1 file (checked 1443 source files)
+```",https://github.com/pandas-dev/pandas/pull/58314#issuecomment-2066987562,,,,
+SEN-017,Pandas_Prompt_B_Radical,5_dr-irv@example.com,5_jorisvandenbossche@example.com,6.0,"> Added a line in the whatsnew. Looked in timeseries.html and the section about ""From timestamps to epoch"" is already robust to this change
+
+I still think that file needs to be updated to indicate that the resolution you get from parsing strings varies based on the input.  And there are other places in that file where the proposed change in behavior indicates a possible doc change.  E.g., there is a section on ""Representing out-of-bound spans"" and  the overview talks about the pandas data type b",https://github.com/pandas-dev/pandas/issues/58989#issuecomment-3474425216,,,,
+SEN-018,Pandas_ShortTerm,6_rhshadrach@pandas.com,6_spikhalskiy@pandas.com,6.0,"Thanks for the report. I am negative on the proposed change.
+
+```python
+ser = pd.Series([1], dtype=object)
+print(ser.min())
+# 1
+print(ser.round(4))
+# TypeError: Expected numeric dtype, got object instead.
+```
+
+Unlike `round`, `min` et al are successful on object dtype. If `.round` were to work on object dtype (depending on the values), then I would be okay with fixing it for the empty case. But as-is, it would be an odd edge case to raise on all object dtypes except empty.
+
+It seems to me you sh",https://github.com/pandas-dev/pandas/issues/63444#issuecomment-3678921104,,,,
+SEN-019,Pandas_ShortTerm,6_rhshadrach@pandas.com,6_sanrishi@pandas.com,3.0,"Thanks for the report. Closing as no reproducer has been provided. Please either provide a minimal code sample to reproduce the issue or name the exact test that is failing and we'll be happy to reopen.
+
+> Since I was only able to apply the Bug label, could you please add the following additional labels to help categorize the issue?
+
+Issues are triaged by maintainers, and maintainers will decide the most appropriate labels to apply.
+
+In addition, it appears you are using AI to report this issue.",https://github.com/pandas-dev/pandas/issues/63315#issuecomment-3634703698,,,,
+SEN-020,K8s_Artificial_Dense,6_madhanrm@example.com,6_m1093782566@example.com,7.0,,,,,,
+SEN-021,Pandas_Prompt_B_Radical,5_jbrockmendel@example.com,5_andrewgsavage@example.com,,"Can we make this ""public"" with some kind of documentation that we may adjust it in non-user-facing ways more aggressively than we do with regular APIs?",https://github.com/pandas-dev/pandas/pull/56755#issuecomment-1881873546,,,,
+SEN-022,Pandas_Prompt_A_Individual,4_rhshadrach@example.com,4_hwhsu1231@example.com,6.0,"Thanks for the context here. I'm happy to reopen, but I'm rather negative on releasing older versions of pandas, including only on GitHub. This also includes having the tags out of sync with the releases. I'd be okay with merging a patch to 2.1.x though.
+
+cc @mroeschke for any thoughts.",https://github.com/pandas-dev/pandas/issues/62303#issuecomment-3273034033,,,,
+SEN-023,Pandas_LongTerm,2_jbrockmendel@example.com,2_tomaugspurger@example.com,,Looks like the thing to do is patch DatetimeIndex._maybe_cast_slice_bound to round down in these cases,https://github.com/pandas-dev/pandas/issues/63262#issuecomment-3614267407,,,,
+SEN-024,Pandas_Prompt_B_Radical,5_jorisvandenbossche@example.com,5_rhshadrach@example.com,5.0,Backport -> https://github.com/pandas-dev/pandas/pull/60771,https://github.com/pandas-dev/pandas/pull/60663#issuecomment-2609072949,,,,
+SEN-025,Pandas_Prompt_B_Radical,5_rhshadrach@example.com,5_chuck321123@example.com,,"Conversion to float32 is lossy. Add `print(x - y)` at the end:
+
+```
+   Col1          Col2
+0     0 -4.516602e-06
+1     0 -9.765625e-07
+2     0  2.441406e-06
+3     0  2.294922e-05
+4     0  9.765625e-06
+5     0  8.239746e-07
+6     0 -2.441406e-06
+7     0  1.464844e-05
+8     0  1.098633e-06
+9     0 -5.371094e-06
+```",https://github.com/pandas-dev/pandas/issues/56774#issuecomment-1881845336,,,,
+SEN-026,Pandas_LongTerm,3_rhshadrach@example.com,3_ghost@example.com,7.0,"Thanks for the report. Cython is still working on support (but it seems 3.1 is getting close). pandas cannot support free-threading until after Cython is ready. Even then, it's not clear to me what the level of effort it will take to support free-threading. Work on this is certainly appreciated!
+
+Reworking this issue as an enhancement.",https://github.com/pandas-dev/pandas/issues/60972#issuecomment-2699325358,,,,
+SEN-027,Pandas_Prompt_A_Individual,4_rhshadrach@example.com,4_simonaubertbd@example.com,7.0,"Thanks for the request. Assuming all of our current engines can support this, this seems like a common desire; I'm positive here. I would recommend the argument:
+
+    autofilter: bool | list-like = False
+
+allowing the user to control which index/columns get filters. However, we'd need to workout how this interacts with other arguments, namely `startrow` and `mergecells`.",https://github.com/pandas-dev/pandas/issues/61194#issuecomment-2762429265,,,,
+SEN-028,Pandas_LongTerm,2_mroeschke@example.com,2_lithomas1@example.com,8.0,Thanks @lithomas1. We're on our way to removing the CircleCI builds! ,https://github.com/pandas-dev/pandas/pull/60722#issuecomment-2605550325,,,,
+SEN-029,K8s_Strict_Large,1_apelisse@example.com,1_alexzielenski@example.com,,"> is this still an issue? 
+
+Yes
+
+> should it be resolved before enabling by default?
+
+That's the cache for the downloaded discovery for each apiservice. The list probably doesn't grow very large. Fix is in #116828. Considering the pain of non-aggregated discovery on some users, and the time they have had to wait to get the feature, I'd say the trade-off is that this isn't nearly as bad.
+",https://github.com/kubernetes/kubernetes/issues/115301#issuecomment-1478840185,,,,
+SEN-030,Pandas_LongTerm,3_rhshadrach@example.com,3_ganbaaelmer@example.com,7.0,"Thanks for the report. Currently `str` uses NumPy object dtypes. But this is an area of pandas that is under active development and will change in the future. See https://pandas.pydata.org/pdeps/0014-string-dtype.html for more details. You can enable it by using `pd.options.future.infer_string = True`:
+
+```python
+pd.options.future.infer_string = True
+ser = pd.Series([""a"", ""b"", None])
+print(ser.astype(""str"").dtype)
+# str
+```
+
+@jorisvandenbossche - I'm seeing the following:
+
+```python
+pd.options.f",https://github.com/pandas-dev/pandas/issues/59732#issuecomment-2339139908,,,,

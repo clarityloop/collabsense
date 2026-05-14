@@ -1,0 +1,698 @@
+{
+  "strengths": [
+    {
+      "id": "STR-001",
+      "config": "Pandas_LongTerm",
+      "person": "3_yasirroni@example.com",
+      "label": "Advocates for user-friendly design",
+      "score": "8.0",
+      "comment": "Thanks all for the discussion. I think we have consensus on the following points...\n\n1. There is broad agreement that the current API?requiring alternating positional arguments for setting options?is unintuitive and a relic from older design choices.\n2. Many contributors favor allowing a dictionary to be passed to pd.set_option. This approach is seen as a cleaner, more natural way to specify multiple key-value pairs.\n3. While the new dict-based method simplifies the syntax, there is caution abou...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61093#issuecomment-2830223914"
+    },
+    {
+      "id": "STR-002",
+      "config": "Pandas_LongTerm",
+      "person": "1_datapythonista@example.com",
+      "label": "Encourages thoughtful discussion",
+      "score": "",
+      "comment": "A call for vote is in violation of PDEP-1.\n\n> - After 30 days, with a note that there is at most 30 days remaining for discussion, and that a vote will be called for if no discussion occurs in the next 15 days.\n> - After 45 days, with a note that there is at most 15 days remaining for discussion, and that a vote will be called for in 15 days.\n> ...\n> After 30 discussion days, in case 15 days passed without any new unaddressed comments, the authors may close the discussion period preemptively, by...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61596#issuecomment-2952390414"
+    },
+    {
+      "id": "STR-003",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_jorisvandenbossche@example.com",
+      "label": "Ensures consistency",
+      "score": "6.0",
+      "comment": "Thanks @jorisvandenbossche  || > Should I use `\"auto\"` instead of `None` for the default? (for some other options like the parquet engine we use `\"auto\"` for the default that depends on what is installed)\n\nYea I prefer auto for string options like this",
+      "link": "https://github.com/pandas-dev/pandas/pull/59488#issuecomment-2285008651"
+    },
+    {
+      "id": "STR-004",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_kevsteramp@example.com",
+      "label": "Seeks and incorporates feedback",
+      "score": "6.0",
+      "comment": "Looks like a bug with the version of fsspec being tested (`TarContainedFile` in fsspec didn't define flush). You'll want to specify a minimum version in `skip_if_no` (2023.1.0) || > CI looks unrelated\n\nThe test that's failing is the one being added here.\n\nhttps://github.com/pandas-dev/pandas/actions/runs/11700807499/job/32585578297?pr=60100#step:8:83 || Use the decorator `td.skip_if_no(\"fsspec\")`. || CI is fixed, can you merge main. || I think this looks good, but the CI has many unrelated failu...",
+      "link": "https://github.com/pandas-dev/pandas/pull/60100#issuecomment-2465545215"
+    },
+    {
+      "id": "STR-005",
+      "config": "K8s_Strict_Large",
+      "person": "3_axezhan@example.com",
+      "label": "Demonstrates initiative",
+      "score": "",
+      "comment": "/lgtm\n/approve",
+      "link": "https://github.com/kubernetes/kubernetes/pull/127590#issuecomment-2414802558"
+    },
+    {
+      "id": "STR-006",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_yasirroni@example.com",
+      "label": "Encourages collaborative problem-solving",
+      "score": "6.666666666666667",
+      "comment": "Thanks all for the discussion. I think we have consensus on the following points...\n\n1. There is broad agreement that the current API?requiring alternating positional arguments for setting options?is unintuitive and a relic from older design choices.\n2. Many contributors favor allowing a dictionary to be passed to pd.set_option. This approach is seen as a cleaner, more natural way to specify multiple key-value pairs.\n3. While the new dict-based method simplifies the syntax, there is caution abou...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61093#issuecomment-2830223914"
+    },
+    {
+      "id": "STR-007",
+      "config": "K8s_Artificial_Dense",
+      "person": "7_lavalamp@example.com",
+      "label": "Addresses feedback constructively",
+      "score": "7.0",
+      "comment": "/hold\n\nWant to squash? || /lgtm || I'd be happy to get this in and make improvements in follow ups.\n\n/lgtm || lgtm after comments are addressed. || @lavalamp could you rebase on master and list the new results?  I would be curious to see if the `sync.Pool` resulted in any new contention and the added cost of hashing the tokens.",
+      "link": "https://github.com/kubernetes/kubernetes/pull/83797#issuecomment-545578595"
+    },
+    {
+      "id": "STR-008",
+      "config": "Pandas_LongTerm",
+      "person": "3_mroeschke@example.com",
+      "label": "Ensures compatibility across dependencies",
+      "score": "",
+      "comment": "What would it be used for? || What's in general your rationale for deciding how to update the versions? (and do we have some policy about this written somewhere?)\n\nFor Python and numpy I think we follow [SPEC0](https://scientific-python.org/specs/spec-0000/), but for example scipy and xarray are also listed there and you updated them to a more recent version (for example for xarray, the new minimum version 2024.10.0 is less than one year old. Or is the idea that by the time 3.0 is released it wi...",
+      "link": "https://github.com/pandas-dev/pandas/issues/62268#issuecomment-3260136323"
+    },
+    {
+      "id": "STR-009",
+      "config": "Pandas_LongTerm",
+      "person": "2_datapythonista@example.com",
+      "label": "Encourages collaboration",
+      "score": "",
+      "comment": "> Do you want to have the 15 day announcement?\n\nI do think the announcement should happen, as PDEP-1 calls for, on both GitHub and email, as this is not my decision to make. || A call for vote is in violation of PDEP-1.\n\n> - After 30 days, with a note that there is at most 30 days remaining for discussion, and that a vote will be called for if no discussion occurs in the next 15 days.\n> - After 45 days, with a note that there is at most 15 days remaining for discussion, and that a vote will be c...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61596#issuecomment-2952414117"
+    },
+    {
+      "id": "STR-010",
+      "config": "K8s_Strict_Large",
+      "person": "2_enj@example.com",
+      "label": "Demonstrates thoroughness",
+      "score": "9.0",
+      "comment": "> For onlookers, this is an important package tree, so we don't take adding approvers lightly.\n> * has a lot of experience reviewing, fixing, and adding to client-go features\n> \n> * has helped evolve and fix some of the thorniest bits (TLS transport cache, etc)\n\nAgreed\n\n/lgtm\n/approve || /hold\n\n`pull-kubernetes-e2e-kind-kms` is failing\n\nNeed to remove this line in e2e kind config\nhttps://github.com/kubernetes/kubernetes/blob/b6b7abc871a55ce26bc62c0d5452b73077364395/test/e2e/testing-manifests/aut...",
+      "link": "https://github.com/kubernetes/kubernetes/pull/135183#issuecomment-3553586176"
+    },
+    {
+      "id": "STR-011",
+      "config": "Pandas_ShortTerm",
+      "person": "6_eicchen@pandas.com",
+      "label": "Proposes thoughtful solutions",
+      "score": "5.0",
+      "comment": "I would be cautious here. There will always be precision issues, and there will always be something more one can do about it. The question becomes how much is too much, especially considering how many users run into problems. It seems to me, just based on my own experience, that for 99.9% of usages, pandas current algorithm is sufficient. That said, if there are improvements that could improve stability without significant performance or maintenance cost, I think they can definitely be considere...",
+      "link": "https://github.com/pandas-dev/pandas/issues/62870#issuecomment-3454292302"
+    },
+    {
+      "id": "STR-012",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_mroeschke@example.com",
+      "label": "Enhance testing and benchmarking practices",
+      "score": "",
+      "comment": "It might not be just the length 1 case, I see that a longer one is also buggy, but in a different way (returning a wrong result instead of error). Can you check if this is also solved by this change and if so maybe add a test for it as well?\n\n```\n>>> idx = pd.RangeIndex(5)\n>>> idx[np.array([True, True, False, False, True])]\nIndex([0, 1, 4], dtype='int64')\n>>> idx[pd.Series([True, True, False, False, True])]\nIndex([0, 1, 4], dtype='int64')\n>>> idx[pd.Series([True, True, False, False, True]).array...",
+      "link": "https://github.com/pandas-dev/pandas/pull/63402#issuecomment-3667119362"
+    },
+    {
+      "id": "STR-013",
+      "config": "K8s_Strict_Large",
+      "person": "2_jiahuif@example.com",
+      "label": "Addresses reviewer feedback",
+      "score": "",
+      "comment": "/lgtm\n/approve\nthis is to fix the bug that variables could not be recognized in VAP status. However, since it is not a security fix or regression bug fix. I'll leave it to release-managers to decide if it is ok to be backported. Thanks :) || /triage accepted\n/assign || > @cici37 All comments addressed, could you re-lgtm? Thank you. /hold cancel\n\nWould you plan to address [this comment](https://github.com/kubernetes/kubernetes/pull/122886/files#r1465870241) as well?",
+      "link": "https://github.com/kubernetes/kubernetes/pull/124139#issuecomment-2040365867"
+    },
+    {
+      "id": "STR-014",
+      "config": "Pandas_LongTerm",
+      "person": "3_simonaubertbd@example.com",
+      "label": "Engages in constructive dialogue",
+      "score": "5.6",
+      "comment": "Thanks for the request. Assuming all of our current engines can support this, this seems like a common desire; I'm positive here. I would recommend the argument:\n\n    autofilter: bool | list-like = False\n\nallowing the user to control which index/columns get filters. However, we'd need to workout how this interacts with other arguments, namely `startrow` and `mergecells`. || If I'm understanding the request right, @simonaubertbd desires for `df.groupby([]).agg(...)` to behave the same as `df.agg(...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61194#issuecomment-2762429265"
+    },
+    {
+      "id": "STR-015",
+      "config": "Pandas_LongTerm",
+      "person": "1_vignesh14052002@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "5.75",
+      "comment": "> I dont't understand why this was added, but reverting solves the below issue\n\nThe commit message was \"memoize objects when reading from file to reduce memory footprint\".  So removing it will likely balloon memory footprint.  Instead of removing it, might be more effective to just check for 0, 1, True, False explicitly and let other values be memoized? || Perf impact? This is here for a reason. || Thanks @vignesh14052002 - it seems to me the issue is in `pandas.io.parsers.base_parser.ParserBase...",
+      "link": "https://github.com/pandas-dev/pandas/pull/62226#issuecomment-3246261619"
+    },
+    {
+      "id": "STR-016",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_rhshadrach@example.com",
+      "label": "Proactively addresses potential issues",
+      "score": "",
+      "comment": "I am fine with this, and also fine with removing the lower bound on the version.\n\nDo you know what kind of error you now would get on Windows if you don't have tzdata installed? (I don't know if the `import_optional_dependency` you removed would have shown a warning before pointing to tzdata) || Just noting that the conda-foge recipe should also be updated to make move `python-tzdata` to `run_contrained` (for windows). Could be done in https://github.com/conda-forge/pandas-feedstock/pull/239 if ...",
+      "link": "https://github.com/pandas-dev/pandas/pull/63335#issuecomment-3664832054"
+    },
+    {
+      "id": "STR-017",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_agriyakhetarpal@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "8.0",
+      "comment": "I assumed there is a generic wasm file for all examples, and that clicking on the try out would somehow pass the code to run to it. That's why I was proposing to use an external repo for it. If things are more complex I guess it's on to use whatever the sphinx plugin does.\n\nGood point about the data files. I was thinking they were mostly used for the read_whatever methods. They do in some cases, like here: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html#pandas.read_excel\n\nBut...",
+      "link": "https://github.com/pandas-dev/pandas/pull/61061#issuecomment-2735289237"
+    },
+    {
+      "id": "STR-018",
+      "config": "Pandas_ShortTerm",
+      "person": "6_dr-irv@pandas.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "",
+      "comment": "The result is only wrong when using `numpy>=2`. We build our docs and run doctests with `numpy<2`. Not sure if there is anything holding us back from changing the pin in `environment.yml`, cc @mroeschke.",
+      "link": "https://github.com/pandas-dev/pandas/issues/62966#issuecomment-3483032630"
+    },
+    {
+      "id": "STR-019",
+      "config": "Pandas_LongTerm",
+      "person": "1_datapythonista@example.com",
+      "label": "Encourages methodical testing",
+      "score": "",
+      "comment": "> would you like me to add that CI job (`actions-310-numpy-126.yaml`) in this PR itself, or would you prefer it as a followup PR?\n\nIt's probably easiest to do both in a single PR, because we need to add the extra CI build to verify if the fixes are working, but we will also need those fixes to get a green CI to be able to merge it.",
+      "link": "https://github.com/pandas-dev/pandas/issues/61588#issuecomment-2963051349"
+    },
+    {
+      "id": "STR-020",
+      "config": "K8s_Artificial_Dense",
+      "person": "6_lavalamp@example.com",
+      "label": "Engages in thoughtful discussions",
+      "score": "7.0",
+      "comment": "> a) maybe we shouldn't log this more than 1x per second or something?\n\nI don't want to hide it, it's really not supposed to happen :-)\n\n> b) maybe the error could make it clearer that the problem is the user's data?\n\nit's not really user-data though. The fact that the error triggers here rather than in the actual validation means that there is a discrepancy between our validation and the regular validation. That's probably a problem that *we* have to fix. In that specific example, we can see th...",
+      "link": "https://github.com/kubernetes/kubernetes/issues/88182#issuecomment-589757512"
+    },
+    {
+      "id": "STR-021",
+      "config": "Pandas_LongTerm",
+      "person": "1_lithomas1@example.com",
+      "label": "Facilitates constructive discussions",
+      "score": "6.5",
+      "comment": "> and if the idea is a PDEP needs to address them in detail before being valid, then I worry that the PDEP process won't be suitable to clarify larger enhancements to the project, as that is an impossible ask\n\nour project roadmap states\n\n> The roadmap is defined as a set of major enhancement proposals named PDEPs.\n\nWe use the roadmap to solicit project funding and so that the community has an idea of the future direction of pandas.\n\nSo I think that we need to be able to approve PDEPs which are p...",
+      "link": "https://github.com/pandas-dev/pandas/pull/58623#issuecomment-2956314415"
+    },
+    {
+      "id": "STR-022",
+      "config": "Pandas_LongTerm",
+      "person": "3_tacaswell@example.com",
+      "label": "Proactively addresses potential issues",
+      "score": "",
+      "comment": "Thanks @mpage and @ngoldbaum for the input! \n\n> The suggestion to implement `__setitem__` in C and have it call `PyUnstable_Object_IsUniqueReferencedTemporary` might work, too.\n\nI have been trying that, see https://github.com/pandas-dev/pandas/pull/62070, and it _seems_ to be working regardless of it being called on a method. I even got it working with cython instead of writing a small extension type in c, although this gives a bit of a hassle to figure out the correct MRO and other impacts (on ...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61368#issuecomment-3168384646"
+    },
+    {
+      "id": "STR-023",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_willayd@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "7.0",
+      "comment": "@WillAyd - are you comfortable calling this a bug fix (meaning it doesn't need deprecation)? || The code responsible for this behavior links back to https://github.com/pandas-dev/pandas/issues/5610, but this phenomenon was not discussed there. I'm +1 on your expected behavior.\n\nMore generally, there are a number of ways `as_index=False` behaves differently than `df.groupby(...as_index=True)...reset_index()`, and I think they should be the same. In fact, we should implement `as_index=False` as ju...",
+      "link": "https://github.com/pandas-dev/pandas/issues/58291#issuecomment-2087409325"
+    },
+    {
+      "id": "STR-024",
+      "config": "Pandas_LongTerm",
+      "person": "3_ssche@example.com",
+      "label": "Provides detailed and thoughtful feedback",
+      "score": "8.0",
+      "comment": "Thanks @ssche - finally got some time to take a look into this. I believe this can currently be accomplished with the `level` argument.\n\n```python\nseries = pd.Series(\n   [26.7300, 24.2550],\n   index=pd.Index([81, 82], name='a')\n)\nother_index = pd.MultiIndex(\n   levels=[\n     pd.Index([81, 82], name='a'),\n     pd.Index([np.nan], name='b'),\n     pd.Index([\n       '2018-06-01', '2018-07-01'\n     ], name='c')\n   ],\n   codes=[\n     [0, 0, 1, 1],\n     [0, 0, 0, 0],\n     [0, 1, 0, 1]\n   ],\n   names=['a...",
+      "link": "https://github.com/pandas-dev/pandas/issues/60923#issuecomment-2702135262"
+    },
+    {
+      "id": "STR-025",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_vignesh14052002@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "6.333333333333333",
+      "comment": "> I dont't understand why this was added, but reverting solves the below issue\n\nThe commit message was \"memoize objects when reading from file to reduce memory footprint\".  So removing it will likely balloon memory footprint.  Instead of removing it, might be more effective to just check for 0, 1, True, False explicitly and let other values be memoized? || Thanks @vignesh14052002 - it seems to me the issue is in `pandas.io.parsers.base_parser.ParserBase._convert_to_ndarrays`. There we call `self...",
+      "link": "https://github.com/pandas-dev/pandas/pull/62226#issuecomment-3246261619"
+    },
+    {
+      "id": "STR-026",
+      "config": "Pandas_LongTerm",
+      "person": "3_jbrockmendel@example.com",
+      "label": "Addresses comments thoroughly",
+      "score": "8.0",
+      "comment": "> I'm not opposed to that being discussed separately, but am averse to expanding the scope here.\n> \n> I'm getting pretty burnt out over here. Going to tag out on this.\n\nI don't think you have to expand scope.  I just think we need to document that doing `.astype(int)` is dangerous with series containing datetime-like data.  If you do that, I'm fine with moving this forward.  \n\nWould like to see what @rhshadrach thinks.\n || > > What's not clear to me is that if you have a Timestamp, and you use T...",
+      "link": "https://github.com/pandas-dev/pandas/pull/62801#issuecomment-3482977809"
+    },
+    {
+      "id": "STR-027",
+      "config": "K8s_Strict_Large",
+      "person": "1_alexzielenski@example.com",
+      "label": "Proactively addresses issues",
+      "score": "",
+      "comment": "/triage accepted || /close \nin favor of https://github.com/kubernetes/kubernetes/pull/126497\n\nThanks || @alexzielenski  please rebase! || lgtm\n\n/approve || /approve || Thanks for the PR!\nMaybe update the storagehash inside pkg/controlplane/storageversionhashdata/data.go as well? :) || > Lgtm.\n> \n> Verify is still red.\n> \n> Needs an API approver for finally tagging.\n\n@sttts did you confirm the bazillion listed versions were accurate?  The mechanics here look correct and if the versions are correc...",
+      "link": "https://github.com/kubernetes/kubernetes/issues/115691#issuecomment-2770610392"
+    },
+    {
+      "id": "STR-028",
+      "config": "K8s_Strict_Large",
+      "person": "2_lavalamp@example.com",
+      "label": "Encourages consensus",
+      "score": "7.0",
+      "comment": "I think we reached consensus.\n\n/hold cancel || > Any objections to getting this merged today?\n\nI see one hold from you Daniel and another from @deads2k so if both of you are ok. I don't have a objection. The only other thing i can think of is do we need to update guidance for deprecation or something based on this problem/example (but that can happen after this lands) || I agree that this is a really tempting field to use, particularly client-side, but the risk of incompatible implementations an...",
+      "link": "https://github.com/kubernetes/kubernetes/pull/108717#issuecomment-1075419211"
+    },
+    {
+      "id": "STR-029",
+      "config": "Pandas_LongTerm",
+      "person": "1_kopytjuk@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "6.666666666666667",
+      "comment": "This is a situation I've run into occasionally. It's a few lines of user code, and yes, you need to track what you're joining on. I don't think it's unreasonable for the onus to be on users here, but no objection to adding a flag. || > @pandas-dev/pandas-core any opinion on adding a flag to `pandas.merge` to make the suffixes be added also to non-conflicting names?\n\nI think this is a nice idea.  If we default it to `False`, then the current behavior is preserved. || Thanks for the clarification....",
+      "link": "https://github.com/pandas-dev/pandas/pull/61498#issuecomment-2937924922"
+    },
+    {
+      "id": "STR-030",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_tacaswell@example.com",
+      "label": "Engages in collaborative problem-solving",
+      "score": "",
+      "comment": "Interesting! We are indeed using weakrefs internally for multiple things (for example to keep track of DataFrames sharing data (for copy-on-write purposes), although that should not be pointing to DataFrames but to lower level structures. In this case it seems that the `DataFrame.flags` attribute has a weakref pointing back to the parent dataframe, and that attribute is created for every dataframe at init time. That clarifies why in this test example the each of the (temporary) dataframes have a...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61368#issuecomment-3430773054"
+    }
+  ],
+  "growth": [
+    {
+      "id": "GRO-001",
+      "config": "K8s_Artificial_Dense",
+      "person": "8_saad-ali@example.com",
+      "label": "Clarify feature gate deprecation process",
+      "score": "",
+      "comment": "I think we actually need to lock to default, and the deprecate for 2 releases before removing. Will send an update.",
+      "link": "https://github.com/kubernetes/kubernetes/pull/105090#issuecomment-931560205"
+    },
+    {
+      "id": "GRO-002",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_aram-cedarwood@example.com",
+      "label": "Ensure completeness of PR documentation",
+      "score": "",
+      "comment": "thanks @aram-cinnamon , could you add a whatsnew note please?",
+      "link": "https://github.com/pandas-dev/pandas/pull/59245#issuecomment-2229055121"
+    },
+    {
+      "id": "GRO-003",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_wonb168@example.com",
+      "label": "Avoid sharing inaccessible or external resources",
+      "score": "6.0",
+      "comment": "Closing as needs info. Can you post an example that is copy-pastable without having to load an unknown zip file? See https://matthewrocklin.com/minimal-bug-reports.html and we can re-open",
+      "link": "https://github.com/pandas-dev/pandas/issues/60466#issuecomment-3106700002"
+    },
+    {
+      "id": "GRO-004",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_fangchenli@example.com",
+      "label": "Communicate changes in PR relevance",
+      "score": "7.0",
+      "comment": "Thanks @fangchenli, but I just merged https://github.com/pandas-dev/pandas/pull/61744 which allow us to get around the error (skipping validation for objects that don't have docstrings which is probably the right thing to do).\n\nGoing to close since we don't need to pin numpydoc anymore",
+      "link": "https://github.com/pandas-dev/pandas/pull/61725#issuecomment-3019986817"
+    },
+    {
+      "id": "GRO-005",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_zkurtz@example.com",
+      "label": "Align proposals with project scope",
+      "score": "4.0",
+      "comment": "Thanks for the request but I think personal usage of the `drop` in `reset_index` is sufficient for this use case so cloinsg || Agreed that this probably doesn't belong in pandas, and since dummio implements this the functionality can live there so closing || Thanks for the request. I'm negative on this feature, it adds more code to maintain and test without providing any new behavior users cannot already and easily access. \n\nIn addition, it requires pandas to parse paths and determine the extens...",
+      "link": "https://github.com/pandas-dev/pandas/issues/60869#issuecomment-3229269667"
+    },
+    {
+      "id": "GRO-006",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_yasirroni@example.com",
+      "label": "Align new features with existing API conventions",
+      "score": "8.0",
+      "comment": "If you are doing this, make sure that `pandas.option_context(....)` also mirrors the new interface. || > I find this to be a rough edge in pandas. Is there another package that allows the specification of options/configurations/settings as an iterable of alternating key-value pairs? It seems to me like an odd choice for an API, and one that we can improve by having users supply a data structure that more naturally embodies the key-value relationship.\n\nI agree!  I'm all for having good design pri...",
+      "link": "https://github.com/pandas-dev/pandas/issues/61093#issuecomment-2821558394"
+    },
+    {
+      "id": "GRO-007",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_kevsteramp@example.com",
+      "label": "Clarify and enhance benchmark reporting",
+      "score": "8.0",
+      "comment": "Thanks @KevsterAmp  || For you benchmark could you show before and after timings",
+      "link": "https://github.com/pandas-dev/pandas/pull/59608#issuecomment-2311321168"
+    },
+    {
+      "id": "GRO-008",
+      "config": "Pandas_LongTerm",
+      "person": "1_ylink-lfs@example.com",
+      "label": "Avoid premature assignment of approvers",
+      "score": "4.0",
+      "comment": "@ylink-lfs please stop assigning to approvers before there are any lgtm applied.",
+      "link": "https://github.com/kubernetes/kubernetes/pull/132534#issuecomment-3081416878"
+    },
+    {
+      "id": "GRO-009",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_jorisvandenbossche@example.com",
+      "label": "Improve test coverage for edge cases",
+      "score": "6.0",
+      "comment": "Looks like a good addition, nice way to avoid `copy=None` using both.  (I am not 100% sure if there is a `copy=True` path for this particular case, but it LGTM either way.)",
+      "link": "https://github.com/pandas-dev/pandas/pull/60191#issuecomment-2456420065"
+    },
+    {
+      "id": "GRO-010",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_phofl@example.com",
+      "label": "Ensure thorough documentation updates",
+      "score": "",
+      "comment": "Thanks, can you also update the docstrings?\n\n(e.g. https://github.com/pandas-dev/pandas/pull/56724/files#diff-9157afe37d6dba4c96d24fce3cf8290e3810b4662f77abf4a71719bbee795a25R845)",
+      "link": "https://github.com/pandas-dev/pandas/pull/56724#issuecomment-1876153683"
+    },
+    {
+      "id": "GRO-011",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_vignesh14052002@example.com",
+      "label": "Use permalinks for code references",
+      "score": "6.0",
+      "comment": "@vignesh14052002 - it would be helpful if you provided a reproducible example, e.g.\n\n```python\ndf = pd.DataFrame({\"a\": [\"TRUE\", \"1\"], \"b\": [\"TRUE\", \"TRUE\"], \"c\": [\"1\", \"TRUE\"]})\ndf.to_excel(\"test.xlsx\")\n```\n\nDoes that file reproduce the issue for you?\n\nAlso, it would be helpful if instead of posting screenshots, you used plaintext for code and permalinks for when you want to reference pandas code.\n\nAs far as I can tell so far, the code you are changing is not hit.",
+      "link": "https://github.com/pandas-dev/pandas/issues/60088#issuecomment-2754901774"
+    },
+    {
+      "id": "GRO-012",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_ssche@example.com",
+      "label": "Consider edge cases in proposed solutions",
+      "score": "6.666666666666667",
+      "comment": "We are recursing because extract_array is not getting called on the \"where\" entry of **kwargs.  Getting this right in The General Case is a very hard problem.  i.e. in this particular case we could do `kwargs[\"where\"] = extract_array(kwargs[\"where\"], extract_numpy=True)`, but if the Series passed happened to be not-aligned that would give silently-incorrect results.\n\nProperly dealing with kwargs is why implementing `__array_function__` never got off the ground. || > Strangely enough, one cannot ...",
+      "link": "https://github.com/pandas-dev/pandas/issues/60611#issuecomment-3016837156"
+    },
+    {
+      "id": "GRO-013",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_wonb168@example.com",
+      "label": "Include reproducible examples in bug reports",
+      "score": "6.25",
+      "comment": "Closing as this needs more information to diagnose || Closing as needs info. Can you post an example that is copy-pastable without having to load an unknown zip file? See https://matthewrocklin.com/minimal-bug-reports.html and we can re-open || > and if df not arrow backend?and how to change it to?\n\nThere is no flag to change the default.  You can specify `dtype=\"int64[pyarrow]\"` explicitly or convert to arrow with df = `df.convert_dtypes(dtype_backend=\"pyarrow\")`\n\nTo diagnose the performance di...",
+      "link": "https://github.com/pandas-dev/pandas/issues/60714#issuecomment-3506774016"
+    },
+    {
+      "id": "GRO-014",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_fbourgey@example.com",
+      "label": "Address CI and linting issues proactively",
+      "score": "",
+      "comment": "yup - this is the test failure you should focus on:\n```python\n\n14m 4s\nPrepare all required actions\nGetting action download info\nDownload action repository 'actions/upload-artifact@v4' (SHA:50769540e7f4bd5e21e526ee35c689e35e0d6874)\nDownload action repository 'codecov/codecov-action@v4' (SHA:e28ff129e5465c2c0dcc6f003fc735cb6ae0c673)\nRun ./.github/actions/run-tests\nRun ci/run_tests.sh\nPYTHONHASHSEED=2464250916\nMESONPY_EDITABLE_VERBOSE=1 PYTHONDEVMODE=1 PYTHONWARNDEFAULTENCODING=1 pytest -r fE -n au...",
+      "link": "https://github.com/pandas-dev/pandas/pull/59719#issuecomment-2349927905"
+    },
+    {
+      "id": "GRO-015",
+      "config": "K8s_Strict_Large",
+      "person": "8_saad-ali@example.com",
+      "label": "Enhance debugging and testing practices",
+      "score": "",
+      "comment": "Looking through [csi_plugin.go](https://github.com/kubernetes/kubernetes/blob/master/pkg/volume/csi/csi_plugin.go#L52), I see that somewhat recently, `csiTimeout` was changed from 15sec to 2min. This could explain why I've noticed in some clusters, very rarely attachments even happening after a while (if there is indeed throttling). Trying to reproduce these issues in 1.14.8, I have noticed that attachments are more likely to succeed, although still very slow when a lot of activity has taken pla...",
+      "link": "https://github.com/kubernetes/kubernetes/issues/84169#issuecomment-544800700"
+    },
+    {
+      "id": "GRO-016",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_michiel-de-muynck@example.com",
+      "label": "Clarify expected behavior in edge cases",
+      "score": "",
+      "comment": "@michiel-de-muynck \nCould you confirm what would be the expected behavior when \n```\nimport pandas as pd\nfrom pandas.testing import assert_frame_equal\n\ndf1 = pd.DataFrame(\n    {\n        \"x\": pd.Series([pd.NA,1], dtype=\"Int32\"),\n    }\n)\ndf2 = pd.DataFrame(\n    {\n        \"x\": pd.Series([pd.NA,1], dtype=\"object\"),\n    }\n)\n\nassert_frame_equal(df1, df2, check_dtype=False) # fails, but should succeed\n```\n\n\nThanks.",
+      "link": "https://github.com/pandas-dev/pandas/issues/61473#issuecomment-3395477584"
+    },
+    {
+      "id": "GRO-017",
+      "config": "Pandas_Prompt_A_Individual",
+      "person": "4_bashtage@example.com",
+      "label": "Consider temporary reverts for stability",
+      "score": "6.0",
+      "comment": "This was failing since starting to use the `scientific-python/upload-nightly-action` action. I see @mroeschke opened https://github.com/scientific-python/upload-nightly-action/issues/150 for that and contributed a (partial?) fix already\n\n@mroeschke in the future, I think it might be better to temporarily revert the changes just to ensure the wheel building still continues to work, until the issue is solved\n\nI suppose the full solution is add this upload/download step so the wheels can be uploade...",
+      "link": "https://github.com/pandas-dev/pandas/issues/63430#issuecomment-3674935395"
+    },
+    {
+      "id": "GRO-018",
+      "config": "K8s_Strict_Large",
+      "person": "8_saad-ali@example.com",
+      "label": "Improve code freeze awareness",
+      "score": "",
+      "comment": "@saad-ali is this still in scope for 1.13? I dont see any associated PR(s) here. Can you please give an appropriate priority/ label for this issue \n\nWe are nearing code slush for 1.13 next Friday 11/9 and Code freeze in 2 weeks. If you think this issue isn't critical for 1.13 and work might extend beyond code slush please work with @nikopen  to move this out. thanks || @saad-ali should this issue be tracked for 1.13 or is it already covered by #70505?\n\n/cc @nikopen",
+      "link": "https://github.com/kubernetes/kubernetes/issues/69122#issuecomment-434943088"
+    },
+    {
+      "id": "GRO-019",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_hwhsu1231@example.com",
+      "label": "Provide actionable steps for issue resolution",
+      "score": "6.0",
+      "comment": "It's not exactly clear that this is a specific pandas error since the error comes from Pathlib not being able to create a directory? Especially since it appears that snippet is the same across all the 2.x versions.\n\nI am -0 pushing something to the 2.1.x branch specifically for this since it's not obviously pandas specific. Maybe your script can patch around this file for 2.1.x or try installing different Python or Sphinx versions to see if it's still happening.\n\nNonetheless, a future enhancemen...",
+      "link": "https://github.com/pandas-dev/pandas/issues/62303#issuecomment-3275567612"
+    },
+    {
+      "id": "GRO-020",
+      "config": "Pandas_Prompt_B_Radical",
+      "person": "5_behrenhoff@example.com",
+      "label": "Ensure thorough testing for edge cases",
+      "score": "",
+      "comment": "> I am using pd.to_timedelta([1,2,3], unit=\"d\") and get NANOsecond precision. Why?\n\nThere's been some discussion about this, and I think participants generally agree it would be nice to give a lower unit here (i.e. output unit match input unit, or closest-to-supported).  This works for integer data, but can screw up with floats (xref #53445).\n\nWill need to give this some more thought.",
+      "link": "https://github.com/pandas-dev/pandas/issues/63272#issuecomment-3617329568"
+    }
+  ],
+  "sentiment": [
+    {
+      "id": "SEN-001",
+      "config": "Pandas_LongTerm",
+      "sender": "2_mroeschke@example.com",
+      "engine_score": "8.0",
+      "comment": "Thanks @rhshadrach",
+      "link": "https://github.com/pandas-dev/pandas/pull/62178#issuecomment-3250133338"
+    },
+    {
+      "id": "SEN-002",
+      "config": "Pandas_Prompt_A_Individual",
+      "sender": "4_rhshadrach@example.com",
+      "engine_score": "7.0",
+      "comment": "My understanding is that the core team has general alignment on distinguishing NaN from NA.\n\n> I certainly think it makes sense to have some nan_is_na option that can be disabled (I would also do it at the function/method level, but then it probably makes sense to have a global override as well).\n\nThis sounds like too much to me. Users can use a context manager if they want to apply one behavior to some sections of code and not others. I do not think we need to introduce arguments to functions/m...",
+      "link": "https://github.com/pandas-dev/pandas/pull/62040#issuecomment-3381271476"
+    },
+    {
+      "id": "SEN-003",
+      "config": "K8s_Strict_Large",
+      "sender": "8_euank@example.com",
+      "engine_score": "7.0",
+      "comment": "LGTM other than the nit",
+      "link": "https://github.com/kubernetes/kubernetes/pull/32148#issuecomment-245105554"
+    },
+    {
+      "id": "SEN-004",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_jorisvandenbossche@example.com",
+      "engine_score": "5.0",
+      "comment": "PyArrow was about adding a new (big) required dependency, here it is just about bumping the minimum version of an existing required dependency. Something we do all the time, and we never warn for explicitly in advance. The only difference here is that we want to take a bit longer support timeline for numpy 2.0 given the special situation of the ecosystem support around 2.0 (slower adoption as otherwise because of the bigger changes)\n\nI would say it is also really not that big of a deal to keep n...",
+      "link": "https://github.com/pandas-dev/pandas/issues/63403#issuecomment-3667495742"
+    },
+    {
+      "id": "SEN-005",
+      "config": "Pandas_LongTerm",
+      "sender": "1_rhshadrach@example.com",
+      "engine_score": "8.0",
+      "comment": "Thanks for the interest here @tsafacjo, do you have an approach in mind? It seems to me some large features need to be added to unblock this issue, but always open to other ways.",
+      "link": "https://github.com/pandas-dev/pandas/issues/60591#issuecomment-2629404775"
+    },
+    {
+      "id": "SEN-006",
+      "config": "Pandas_LongTerm",
+      "sender": "2_mroeschke@example.com",
+      "engine_score": "6.0",
+      "comment": "> 4.14.0 and 4.14.1 don't get installed\n\nWe normally don't pin dependencies to avoid a bug in an optional dependency. In a unit testing context, the recommendation is just to xfail or skip the test based on the failing dependency version.",
+      "link": "https://github.com/pandas-dev/pandas/issues/62492#issuecomment-3347917671"
+    },
+    {
+      "id": "SEN-007",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_jbrockmendel@example.com",
+      "engine_score": "6.0",
+      "comment": "Discussed again on yesterday's dev call, in particular the difficulty of implementing the fallback behavior discussed above.  I proposed an alternative that is effectively \"keep the inference behavior from main, but for strings infer 'us' in cases that would previously infer 's' or 'ms'\".  @jorisvandenbossche  pointed out that this was very close to his OP suggestion.  Besides the nice API, the hope was that it would be more straightforward to implement than other paths.  Participants agreed it ...",
+      "link": "https://github.com/pandas-dev/pandas/issues/58989#issuecomment-3437907748"
+    },
+    {
+      "id": "SEN-008",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_dr-irv@example.com",
+      "engine_score": "",
+      "comment": "I think this should propagate",
+      "link": "https://github.com/pandas-dev/pandas/issues/63094#issuecomment-3523450200"
+    },
+    {
+      "id": "SEN-009",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_jorisvandenbossche@example.com",
+      "engine_score": "6.0",
+      "comment": "My attempt at writing a PDEP for this -> https://github.com/pandas-dev/pandas/pull/58551 \nThis tries to summarize the (long) history and context, and essentially formalizes my proposal above from a few days ago (https://github.com/pandas-dev/pandas/issues/57073#issuecomment-2080683080) about how to move forward on this topic on the short-term for pandas 3.0.",
+      "link": "https://github.com/pandas-dev/pandas/issues/57073#issuecomment-2093232889"
+    },
+    {
+      "id": "SEN-010",
+      "config": "K8s_Strict_Large",
+      "sender": "1_cici37@example.com",
+      "engine_score": "",
+      "comment": "/lgtm",
+      "link": "https://github.com/kubernetes/kubernetes/pull/123080#issuecomment-1931466910"
+    },
+    {
+      "id": "SEN-011",
+      "config": "Pandas_LongTerm",
+      "sender": "3_jbrockmendel@example.com",
+      "engine_score": "6.0",
+      "comment": "why?  im wary of any silent dtype-changing, which we're moving away from elsewhere",
+      "link": "https://github.com/pandas-dev/pandas/issues/58308#issuecomment-2064217974"
+    },
+    {
+      "id": "SEN-012",
+      "config": "Pandas_Prompt_A_Individual",
+      "sender": "4_jorisvandenbossche@example.com",
+      "engine_score": "7.0",
+      "comment": "It is not great behaviour, but it is currently the \"expected\" behaviour, I think. \n\nFirst, the FutureWarning you see comes from numpy (and returning this scalar False value), and as you can see this warning is no longer present when using a recent numpy versions. Then, it actually _does_ an element-wise comparison, or at least it attempts to do so, but one of the individual comparisons is raising an error (the error you see).\n\nThis comes from the fact that `pd.NA` (in contrast to None or np.nan)...",
+      "link": "https://github.com/pandas-dev/pandas/issues/62802#issuecomment-3435442067"
+    },
+    {
+      "id": "SEN-013",
+      "config": "Pandas_LongTerm",
+      "sender": "1_mroeschke@example.com",
+      "engine_score": "6.0",
+      "comment": "Thanks for the PR, but agreed that I'm not sure this maintenance burden of this new implementation is worth the minimal speedup. Thanks for the effort here but closing",
+      "link": "https://github.com/pandas-dev/pandas/pull/59565#issuecomment-2445280458"
+    },
+    {
+      "id": "SEN-014",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_rhshadrach@example.com",
+      "engine_score": "",
+      "comment": "CI should be fixed now. Can you merge main.",
+      "link": "https://github.com/pandas-dev/pandas/pull/60081#issuecomment-2439690508"
+    },
+    {
+      "id": "SEN-015",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_rhshadrach@example.com",
+      "engine_score": "7.0",
+      "comment": "Confirmed on main. Further investigations and PRs to fix are welcome!",
+      "link": "https://github.com/pandas-dev/pandas/issues/59495#issuecomment-2308836295"
+    },
+    {
+      "id": "SEN-016",
+      "config": "Pandas_LongTerm",
+      "sender": "3_rhshadrach@example.com",
+      "engine_score": "7.0",
+      "comment": "I'm +1 on giving this another go.\n\n> maintain the shell if it's added and establish some relevant automations towards its upkeep.\n\nWhat is the expected maintenance / upkeep?\n\n> I'd like to propose reinstating this shell for the website (either on the same page, or elsewhere\n\nGetting Started seems to be a natural place to me.",
+      "link": "https://github.com/pandas-dev/pandas/issues/60747#issuecomment-2606090958"
+    },
+    {
+      "id": "SEN-017",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_mroeschke@example.com",
+      "engine_score": "",
+      "comment": "Thanks for the follow up @MarcoGorelli",
+      "link": "https://github.com/pandas-dev/pandas/pull/59683#issuecomment-2338693136"
+    },
+    {
+      "id": "SEN-018",
+      "config": "Pandas_Prompt_A_Individual",
+      "sender": "4_jorisvandenbossche@example.com",
+      "engine_score": "7.0",
+      "comment": "While I am personally in favor of distinguishing NaN and NA, I think most of the changes here involve distinguishing NaN when constructing the arrays? (so eg constructing the pyarro-based EA from user input like numpy arrays?) \n\nPersonally, I think that is a change we should only make _after_ making those dtypes the default, and probably even years after that after a very long deprecation process. \n(currently _everyone_ who is creating pandas DataFrames from numpy data assumes that the NaNs in t...",
+      "link": "https://github.com/pandas-dev/pandas/pull/61732#issuecomment-3105096303"
+    },
+    {
+      "id": "SEN-019",
+      "config": "Pandas_LongTerm",
+      "sender": "3_mroeschke@example.com",
+      "engine_score": "8.0",
+      "comment": "Thanks @jorisvandenbossche",
+      "link": "https://github.com/pandas-dev/pandas/pull/59414#issuecomment-2271751844"
+    },
+    {
+      "id": "SEN-020",
+      "config": "K8s_Artificial_Dense",
+      "sender": "6_enj@example.com",
+      "engine_score": "3.0",
+      "comment": "I gave it a pass... this would be a great PR to hide a NSA exploit ? \n\n/lgtm",
+      "link": "https://github.com/kubernetes/kubernetes/pull/88708#issuecomment-595436965"
+    },
+    {
+      "id": "SEN-021",
+      "config": "Pandas_LongTerm",
+      "sender": "3_natmokval@example.com",
+      "engine_score": "8.0",
+      "comment": "> thanks @tacaswell , should be right - @natmokval could you confirm please?\n\nI agree, we should point out that we deprecated the aliases `'M,' 'Q,' etc.`, for offsets. Thanks, @tacaswell, for adding the note for the table with Offset aliases.\n\nWe can also mention in this note that we deprecated the aliases `'BM,' 'CBM,' 'BQ,' and 'BY'` in favor of `'BME,' 'CBME,' 'BQE,' and 'BYE'`, but it?s already clear enough.",
+      "link": "https://github.com/pandas-dev/pandas/pull/58861#issuecomment-2141563586"
+    },
+    {
+      "id": "SEN-022",
+      "config": "Pandas_LongTerm",
+      "sender": "1_mroeschke@example.com",
+      "engine_score": "8.0",
+      "comment": "Thanks @jbrockmendel",
+      "link": "https://github.com/pandas-dev/pandas/pull/62229#issuecomment-3246050323"
+    },
+    {
+      "id": "SEN-023",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_willayd@example.com",
+      "engine_score": "6.0",
+      "comment": "I don't think an option with partially implemented features like that is a good idea. Our type system in its current state is an endless array of aliases / types with diverging behavior; I don't think adding more aliases and options makes things any easier, just kind of shuffles the problems around.\n\nI still generally don't understand why we feel the need to break backwards compatability with `dtype=\"string\"`; this PDEP can achieve its objective without doing that and introducing new aliases if ...",
+      "link": "https://github.com/pandas-dev/pandas/pull/58551#issuecomment-2127778240"
+    },
+    {
+      "id": "SEN-024",
+      "config": "Pandas_ShortTerm",
+      "sender": "6_sanrishi@pandas.com",
+      "engine_score": "8.0",
+      "comment": "That sounds like the right path forward.\n\nImplementing support for object dtype via __round__ (delegating to Python's built-in round) would resolve the inconsistency with methods like abs and sum, while naturally handling the empty Series case without special casing length.\n\nIf you are both on board with that approach, I?m happy to update the PR to implement it.",
+      "link": "https://github.com/pandas-dev/pandas/issues/63444#issuecomment-3680800726"
+    },
+    {
+      "id": "SEN-025",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_dr-irv@example.com",
+      "engine_score": "6.0",
+      "comment": "> And given the previous decision to provide a slower migration away from the nanoseconds default, I would like to see some explicit support that we are now fine _not_ doing that (i.e. I think mostly [@rhshadrach](https://github.com/rhshadrach) and [@Dr-Irv](https://github.com/Dr-Irv) argued for that in the meeting, but I might remember incorrectly)\n\nMy main concern here is if someone has code that converts time objects to integers and assumes that those integers represent nanoseconds.\n\ne.g. pd....",
+      "link": "https://github.com/pandas-dev/pandas/issues/58989#issuecomment-3473237815"
+    },
+    {
+      "id": "SEN-026",
+      "config": "Pandas_LongTerm",
+      "sender": "2_jbrockmendel@example.com",
+      "engine_score": "5.0",
+      "comment": "Discussed on today's dev call.  Since there is a 2-3 line alternative, we don't want to add this internally.  closing.",
+      "link": "https://github.com/pandas-dev/pandas/issues/58475#issuecomment-3229427786"
+    },
+    {
+      "id": "SEN-027",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_mroeschke@example.com",
+      "engine_score": "",
+      "comment": "Yeah our wheel jobs depend on the unit tests 100% passing (this _could_ be relaxed but there's a tradeoff of releasing a non-functioning nightly wheel).\n\nThe 3.13 wheels test against a numpy nighties which I think changed something that broke these unit tests, but no one has had time to look into the failure.",
+      "link": "https://github.com/pandas-dev/pandas/issues/59372#issuecomment-2260953090"
+    },
+    {
+      "id": "SEN-028",
+      "config": "Pandas_Prompt_B_Radical",
+      "sender": "5_jbrockmendel@example.com",
+      "engine_score": "6.0",
+      "comment": "Not my favorite thing in the world, but better than the status quo so i'm on board.",
+      "link": "https://github.com/pandas-dev/pandas/pull/58197#issuecomment-2045606785"
+    },
+    {
+      "id": "SEN-029",
+      "config": "Pandas_LongTerm",
+      "sender": "1_simonjayhawkins@example.com",
+      "engine_score": "",
+      "comment": "-1\n\nrejecting PDEP-10 is like throwing the baby out with the bathwater. The issue appears to be just the timing of making PyArrow the required dependency. Of course if others want to reject PDEP-10 and propose keeping PyArrow an optional dependency indefinitely then that's a different issue and I would potentially vote differently on that.",
+      "link": "https://github.com/pandas-dev/pandas/issues/61596#issuecomment-2952281881"
+    },
+    {
+      "id": "SEN-030",
+      "config": "Pandas_ShortTerm",
+      "sender": "6_rhshadrach@pandas.com",
+      "engine_score": "6.0",
+      "comment": "@mohsinm-dev - it does seem like the right direction. But I think we can avoid factorize by calling `dropna` on the unique values. Then `get_indexer` will naturally return `-1` for any missing NA values.\n\n@zachyattack23 \n\n> Would this be a doable task I could do in max 7 hours worth of time?\n\nI do not think this is answerable. Partially because of the large variability in how long an issue takes different people, and partly because one can start working on a issue thinking it will be easy only f...",
+      "link": "https://github.com/pandas-dev/pandas/issues/62903#issuecomment-3498840302"
+    }
+  ]
+}
