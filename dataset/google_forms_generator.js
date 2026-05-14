@@ -308,6 +308,11 @@ function createStrengthsForm() {
     "link": "https://github.com/pandas-dev/pandas/issues/61368#issuecomment-3430773054"
   }
 ];
+
+  for (var j = 0; j < items.length; j++) {
+    items[j].comment = (items[j].comment || '').replace(/`/g, "'");
+    items[j].label = (items[j].label || '').replace(/`/g, "'");
+  }
   
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
@@ -551,6 +556,11 @@ function createGrowthForm() {
     "link": "https://github.com/pandas-dev/pandas/issues/63272#issuecomment-3617329568"
   }
 ];
+
+  for (var j = 0; j < items.length; j++) {
+    items[j].comment = (items[j].comment || '').replace(/`/g, "'");
+    items[j].label = (items[j].label || '').replace(/`/g, "'");
+  }
   
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
@@ -852,6 +862,10 @@ function createSentimentForm() {
     "link": "https://github.com/pandas-dev/pandas/issues/62903#issuecomment-3498840302"
   }
 ];
+
+  for (var j = 0; j < items.length; j++) {
+    items[j].comment = (items[j].comment || '').replace(/`/g, "'");
+  }
   
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
