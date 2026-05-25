@@ -1,131 +1,136 @@
-\documentclass[conference]{IEEEconf}
+\documentclass[a4paper,UKenglish,cleveref,autoref]{lipics-v2021}
 
-\input epsf
 \usepackage{graphicx}
 \usepackage{multirow}
-\usepackage{titlesec}
-\usepackage{balance} 
-\usepackage{stfloats}
-\usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{url}
-\usepackage{cite}
 
-\renewcommand\thesection{\arabic{section}} % arabic numerals for the sections
+\bibliographystyle{plainurl}
 
-\renewcommand\thesubsectiondis{\thesection.\arabic{subsection}}% arabic numerals for the subsections
+\title{CollabSense: Generating Behavioural Coaching Signals from Open Source Collaboration Data}
 
-\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}% arabic numerals for the subsubsections
+\author{Ethan Campbell}{Edinburgh Napier University, Edinburgh, UK}{e.campbell2@napier.ac.uk}{}{}
 
-% Figures are kept in the project root on Overleaf, so no \graphicspath is needed.
+\author{Ashkan Sami\footnote{Corresponding author}}{Edinburgh Napier University, Edinburgh, UK}{a.sami@napier.ac.uk}{}{}
 
-% correct bad hyphenation here
-\hyphenation{op-tical net-works semi-conduc-tor IEEEconf}
+\author{Sachin Goyal}{ClarityLoop}{sachin@clarityloop.com}{}{}
+
+\author{Nima Soroush}{ClarityLoop}{nima@clarityloop.com}{}{}
+
+\authorrunning{E. Campbell, A. Sami, S. Goyal, and N. Soroush}
+
+\Copyright{Ethan Campbell, Ashkan Sami, Sachin Goyal, and Nima Soroush}
+
+\ccsdesc[500]{Software and its engineering~Collaboration in software development}
+\ccsdesc[300]{Computing methodologies~Natural language processing}
+
+\keywords{AI coaching, sentiment analysis, software engineering, open source, K-Core decomposition, prompt engineering, large language models}
+
+%% Editor-only macros (do not touch as author) %%
+\EventEditors{TBD}
+\EventNoEds{2}
+\EventLongTitle{20th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement (ESEM 2026)}
+\EventShortTitle{ESEM 2026}
+\EventAcronym{ESEM}
+\EventYear{2026}
+\EventDate{October 4--9, 2026}
+\EventLocation{Munich, Germany}
+\EventLogo{}
+\SeriesVolume{TBD}
+\ArticleNo{TBD}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 
-\title{\textbf{\Large CollabSense: Generating Behavioural Coaching Signals from Open Source Collaboration\\}}
-
-\author{Author Name$^{1,*}$\\
-	\normalsize $^{1}$Affiliation, City, Country\\
-	\normalsize author@email.com\\
-	\normalsize *corresponding author
-}
-%+++++++++++++++++++++++++++++++++++++++++++
-
-% make the title area
 \maketitle
 \begin{abstract}
-The ClarityLoop AI engine is designed to be an enterprise behavioural coaching tool that scores team sentiment, surfaces individual strengths, and proposes actionable growth opportunities from workplace communications. This work presents a first proof-of-concept evaluation of the engine against real-world open source software development data as a proxy for the dense corporate environments it is designed for. Using public pull requests and issue data from \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes}, we ran the engine across six experimental configurations spanning prompt sensitivity and graph density. The engine accurately mapped sentiment, where comments had a mean score or 6.63/10. Initially growth opportunities failed to generate, as the raw open source data was too sparse. where only 1.1\% of possible contributor pairs ever interacted with each other, making the data too sparse to trigger the engine's coaching logic. Combining a balanced individual-signal prompt with K-Core decomposition to engineer an artificial 35--75\% dense subgraph from Kubernetes increased the rate growth opportunities at a 4.6\% yield while staying accurate. Bias checks across runs showed an execution delta of $-0.05$, a Pareto-fair distribution of critiques, and no verbosity correlation. The results indicate that the engine shows strong promise for real-world deployment, provided data topology and prompt sensitivity are treated as a single connected evaluation problem.
+Extracting individualised behavioural coaching signals automatically from workplace communication remains an underexplored area. This paper presents an initial empirical evaluation of the ClarityLoop AI engine, an enterprise-oriented coaching system, applied to open source software collaboration data as a proxy for the corporate environments for which it was designed. Using public pull request and issue data from \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes}, we evaluate six experimental configurations that vary prompt sensitivity and interaction graph density. The engine produced stable sentiment estimates across all configurations (mean score 6.63/10), but growth opportunities (per-person coaching signals identifying recurring behavioural patterns) did not emerge from raw open source data, as interaction rate between contributors was sparse (1.1\% density). Combining K-Core graph decomposition with a balanced prompt design to construct an artificially dense subgraph (35--75\% density) yielded growth opportunities at a rate of 4.6\% while preserving signal stability. A manual assessment of 20~sampled growth opportunities by two reviewers found 85\% at least partially actionable and 90\% at least partially evidence-supported (Cohen's $\kappa = 0.76$). Bias checks confirmed no verbosity correlation, a Pareto-fair distribution of critiques, and a negligible execution delta ($-0.05$) between matched runs. These findings provide initial evidence that the engine can produce stable, actionable coaching signals from realistic collaboration data, supporting its viability for deployment in enterprise environments where interaction density and communication volume are naturally higher.
 \end{abstract}
-\IEEEoverridecommandlockouts
-\vspace{1.5ex}
-\begin{keywords}
-\itshape AI coaching; sentiment analysis; software engineering; open source; K-Core decomposition; prompt engineering; large language models
-\end{keywords}
 
-\IEEEpeerreviewmaketitle
+\section{Introduction}
+Automatically analysing workplace communications to generate individualised developmental feedback remains underexplored. Existing commercial tools primarily perform passive sentiment monitoring on employee communications, but do not generally identify recurring behavioural patterns or surface per-person coaching moments from everyday interactions. In this problem setting, the ClarityLoop AI engine represents an initial instantiation built around prompt-engineered large language models to deliver such signals at scale.
 
-\section{Introduction \& Objective}
-Using AI to automatically analyse workplace communications and generate individualised developmental feedback is a largely uncharted problem. While a small number of commercial tools perform passive sentiment monitoring on employee communications, none attempt to go further to identify recurring behavioural patterns and surfacing per-person coaching moments from everyday interactions. The ClarityLoop AI engine is a first attempt at this problem, built around prompt-engineered large language models to deliver these signals at scale.
+Historically, tools of this nature have been optimised for the dense, hierarchical communication topologies of traditional corporate teams. We therefore conduct an initial proof-of-concept evaluation of the ClarityLoop engine against real-world data, using the asynchronous and highly technical environment of Open Source Software (OSS) development as a test bed.
 
-Historically, tools of this nature are optimised for the dense, hierarchical communication topologies typical of traditional corporate teams. The primary objective of this research is to perform a first proof-of-concept evaluation of the ClarityLoop engine against real-world data, using the asynchronous and highly technical environment of Open Source Software (OSS) development as a test bed.
+Specifically, this study uses public GitHub pull requests and issue comments from \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes} as a proxy for internal enterprise peer reviews. Open source collaboration provides a large-scale public dataset of professional engineering interactions, offering a useful evaluation setting. However, limited empirical evidence shows whether an enterprise-oriented coaching engine can recover stable, actionable per-person coaching signals from OSS data, or how prompt design and interaction topology shape that evaluation.
 
-Specifically, this study uses public GitHub pull requests and issue comments from massive open source repositories (\texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes}) as a proxy for internal enterprise peer reviews. Open source collaboration provides a massive, high-quality dataset of professional engineering interactions, making it an ideal stress-test for the AI's pattern-recognition capabilities.
-
-This research seeks to answer three core questions:
+This research addresses the following questions:
 \begin{enumerate}
-	\item \textbf{Sentiment Transferability:} Can a tuned AI accurately interpret the tone and intent of open source technical debates without hallucinating negativity or toxic behaviour?
-	\item \textbf{Behavioural Recognition:} Can the engine distinguish between transactional code corrections (e.g., syntax fixes) and genuine behavioural coaching moments (e.g., communication style, collaboration, and leadership)?
-	\item \textbf{Structural Adaptability:} What prompt tuning and data-engineering techniques are required to overcome the inherent sparsity of open source social graphs to successfully trigger the engine's Growth Opportunity algorithms?
+	\item \textbf{RQ1:} Can a tuned AI accurately interpret the tone and intent of open source technical debates without hallucinating negativity or toxic behaviour?
+	\item \textbf{RQ2:} Can the engine distinguish between transactional code corrections (e.g., syntax fixes) and genuine behavioural coaching moments (e.g., communication style, collaboration, and leadership)?
+	\item \textbf{RQ3:} What prompt-tuning and data-engineering techniques are required to overcome the inherent sparsity of open source social graphs and trigger the engine's Growth Opportunity algorithms?
+\end{enumerate}
+
+This paper makes three contributions:
+\begin{enumerate}
+	\item an initial empirical evaluation of an enterprise-oriented behavioural coaching engine on OSS collaboration data;
+	\item evidence that prompt sensitivity and interaction density jointly determine whether coaching signals can be recovered; and
+	\item a reproducible evaluation framing that combines sentiment, signal yield, and stability/fairness checks for coaching-oriented LLM systems.
 \end{enumerate}
 
 \section{Literature Review}
-The CollabSense project draws on three areas of existing research: sentiment analysis applied to professional communication, automated extraction of feedback and soft-skill signals from software artefacts, and the structural analysis of open source collaboration networks. Each of these areas has its own established literature, but the specific gap addressed in this study --- applying an enterprise-tuned behavioural coaching engine to public open source data --- has received little direct attention. This section summarises the relevant prior work and shows how it motivates the experimental design used in later sections.
+The CollabSense project draws on three areas of existing research: sentiment analysis applied to professional communication, automated extraction of feedback and soft-skill signals from software artefacts, and the structural analysis of open source collaboration networks. However, there is limited empirical evidence on whether a behavioural coaching engine can be applied to public open source data. This section summarises the relevant prior work and explains how it motivates the experimental design.
 
 \subsection{Sentiment Analysis in the Workplace}
-Sentiment analysis began with product reviews and social media~\cite{pang2008opinion}, but the techniques have since been adapted to professional communication. Workplace text behaves differently from consumer text as most of it is neutral, relies heavily on technical terms, and people tend not to express strong emotion openly. Loughran and McDonald~\cite{loughran2011liability} showed this clearly in finance, where general-purpose sentiment lexicons such as Harvard~IV consistently flagged neutral business language as negative. The same problem appears in software engineering text. Early work by Murgia et al.~\cite{murgia2014developers} confirmed that developers do express emotion in issue trackers, and Ortu et al.~\cite{ortu2015bullies} released a large labelled corpus of Jira issue comments, providing the empirical foundation for further investigation. Jongeling et al.~\cite{jongeling2017negative} subsequently tested four off-the-shelf sentiment tools (SentiStrength, NLTK, Stanford CoreNLP, Alchemy) on GitHub and Jira data and found that they often disagreed with each other and frequently misread direct but constructive code review as hostile.
+Sentiment analysis began with product reviews and social media~\cite{pang2008opinion}, but the techniques have since been adapted to professional communication. Workplace text differs from consumer text because much of it is neutral, relies heavily on technical terms, and tends not to express strong emotion openly. Loughran and McDonald~\cite{loughran2011liability} showed this in finance, where general-purpose sentiment lexicons such as Harvard~IV consistently flagged neutral business language as negative. The same issue appears in software engineering text. Early work by Murgia et al.~\cite{murgia2014developers} found that developers do express emotion in issue trackers, and Ortu et al.~\cite{ortu2015bullies} released a large labelled corpus of Jira issue comments, providing an empirical foundation for further investigation. Jongeling et al.~\cite{jongeling2017negative} subsequently tested four off-the-shelf sentiment tools (SentiStrength, NLTK, Stanford CoreNLP, Alchemy) on GitHub and Jira data and found that they often disagreed with each other and frequently misread direct but constructive code review as hostile.
 
-That reliability gap drove a wave of sentiment classifiers built specifically for software development. Calefato et al.~\cite{calefato2018sentiment} introduced Senti4SD, a supervised classifier trained on Stack Overflow that performed noticeably better than general-purpose tools on developer text. Lin et al.~\cite{lin2018sentiment} compared several of these tools side by side and concluded that none of them were yet reliable enough for production use, and recommended retraining on the specific platform being analysed. More recent work on cross-platform SE-specific tools~\cite{novielli2020sespecific} and on transformer-based models such as the BERT-based classifier of Biswas et al.~\cite{biswas2020achieving} has closed much of the gap, with reported F1 scores on developer text moving from around 0.6 for lexicon tools to above 0.85.
+That reliability concern prompted a wave of sentiment classifiers built specifically for software development. Calefato et al.~\cite{calefato2018sentiment} introduced Senti4SD, a supervised classifier trained on Stack Overflow that performed better than general-purpose tools on developer text. Lin et al.~\cite{lin2018sentiment} compared several of these tools side by side and concluded that none of them were yet reliable enough for production use, recommending retraining on the specific platform being analysed. More recent work on cross-platform SE-specific tools~\cite{novielli2020sespecific} and on transformer-based models such as the BERT-based classifier of Biswas et al.~\cite{biswas2020achieving} has closed much of the gap, with reported F1 scores on developer text moving from around 0.6 for lexicon tools to above 0.85.
 
-Outside academia, commercial platforms such as Microsoft Viva Insights, Slack analytics, and Humanyze have brought passive sentiment monitoring directly into the workplace. M{\"a}ntyl{\"a} et al.~\cite{mantyla2018evolution} reviewed nearly 7,000 sentiment analysis papers and noted that workplace deployments rarely include checks for verbosity bias, recency bias, or fairness across users, which are the bias dimensions Section~7 of this paper evaluates. Two clear takeaways emerge from this body of work. First, sentiment models trained outside the software domain often misread technical text, so any claim of accuracy on GitHub data needs to be tested rather than assumed. Second, the move from lexicon and classical-ML sentiment tools to LLM-based evaluators is recent enough that there is little systematic evidence on how stable LLM scores are across prompt changes. The bias checks in Section~7 (a consistency delta of $-0.05$, a fair Pareto distribution, and no verbosity correlation) directly address this gap for the ClarityLoop engine.
+Outside academia, commercial platforms such as Microsoft Viva Insights, Slack analytics, and Humanyze have brought passive sentiment monitoring directly into the workplace. M{\"a}ntyl{\"a} et al.~\cite{mantyla2018evolution} reviewed nearly 7,000 sentiment analysis papers and noted that workplace deployments rarely include checks for verbosity bias, recency bias, or fairness across users, which are the bias dimensions Section~7 of this paper evaluates. First, sentiment models trained outside the software domain often misread technical text, so performance on GitHub data should be tested rather than assumed. Second, the move from lexicon and classical-ML sentiment tools to LLM-based evaluators is recent enough that there is limited systematic evidence on how stable LLM scores are across prompt changes. The bias checks in Section~7 (a consistency delta of $-0.05$, a fair Pareto distribution, and no verbosity correlation) examine this question for the ClarityLoop engine.
 
 \subsection{Automated Feedback \& Growth Signals}
-Work on automating developmental feedback, and going beyond just simple scoring of sentiment into actionable coaching content, is in earlier stages than sentiment analysis. The following three areas are relevant.
+Moving beyond simple sentiment scoring toward actionable coaching content, work on automating developmental feedback is at an earlier stage. Three areas are relevant.
 
-The first is \textit{automated peer and code review}. Bacchelli and Bird~\cite{bacchelli2013expectations} showed that modern code review is mostly a communication activity rather than a defect-finding one, with review threads used for knowledge transfer and mentoring. Bosu, Greiler, and Bird~\cite{bosu2015characteristics} classified comments in Microsoft code reviews and found that around a third were genuinely useful in a developmental sense, which motivated later work on labelling review comments by intent. Rahman, Roy, and Kula~\cite{rahman2017predicting} and Ebert et al.~\cite{ebert2019confusion} built classifiers to separate nitpicks, defects, and design discussions, but neither study tried to label behavioural or soft-skill content. The ``nitpick problem'' reported in Section~5.2 is therefore a known issue in the literature, where surface-level corrections make up most of the volume in review text, and any system that does not actively filter them out will surface them at the expense of higher-level signals.
+The first is \textit{automated peer and code review}. Bacchelli and Bird~\cite{bacchelli2013expectations} showed that modern code review is mostly a communication activity rather than a defect-finding one, with review threads used for knowledge transfer and mentoring. Bosu, Greiler, and Bird~\cite{bosu2015characteristics} classified comments in Microsoft code reviews and found that around a third were useful in a developmental sense, which motivated later work on labelling review comments by intent. Rahman, Roy, and Kula~\cite{rahman2017predicting} and Ebert et al.~\cite{ebert2019confusion} built classifiers to separate nitpicks, defects, and design discussions, but neither study tried to label behavioural or soft-skill content. The ``nitpick problem'' reported in Section~5.2 is therefore a known issue in the literature, where surface-level corrections make up most of the volume in review text, and any system that does not actively filter them out will tend to surface them at the expense of higher-level signals.
 
-The second area is \textit{soft-skill extraction}. Outside software engineering, work on the StudentLife corpus~\cite{wang2014studentlife} and on narrative performance reviews~\cite{speer2021scoring} has shown that traits like collaboration and proactivity can be recovered from free-text comments with reasonable agreement against human raters. There is less of this work inside software engineering, and the growth signals that are found tend to accumulate at the team or community level rather than at an individual level. The most recent adjacent work, tAIfa~\cite{almutairi2025taifa}, uses LLMs to deliver automated feedback to teams based on communication patterns, but it operates in a controlled lab setting on purpose-collected interaction data and targets team-level cohesion outcomes rather than per-individual coaching obtained from passively mined repository artefacts. The ClarityLoop engine is unusual in that it produces per-person growth advice from existing open source collaboration history, which makes evaluation harder than standard NLP metrics allow for.
+The second area is \textit{soft-skill extraction}. Outside software engineering, work on the StudentLife corpus~\cite{wang2014studentlife} and on narrative performance reviews~\cite{speer2021scoring} has shown that traits like collaboration and proactivity can be recovered from free-text comments with reasonable agreement against human raters. There is less of this work inside software engineering, and the growth signals that are reported tend to accumulate at the team or community level rather than at an individual level. The most recent adjacent work, tAIfa~\cite{almutairi2025taifa}, uses LLMs to deliver automated feedback to teams based on communication patterns, but it operates in a controlled lab setting on purpose-collected interaction data and targets team-level cohesion outcomes rather than per-individual coaching obtained from passively mined repository artefacts. The ClarityLoop engine differs in that it produces per-person growth advice from existing OSS collaboration history, making evaluation less straightforward than standard NLP metrics allow for.
 
-The third area is the \textit{prompt-engineering trade-off} for LLM-based extraction. Reynolds and McDonell~\cite{reynolds2021prompt} and Liu et al.~\cite{liu2023pretrain} showed that the same model, given different but reasonable instructions, can return outputs that differ by an order of magnitude in volume and meaning. The pattern observed in Section~5 matches this body of work directly, where a strict prompt returning zero growth opportunities, a medium prompt returning 5, and a radical prompt returning 192 was seen. It also supports the methodological choice in Section~6 to keep the medium prompt and instead change the structure of the input data, rather than continuing to relax the prompt and accept the noise that comes with it.
+The third area is the \textit{prompt-engineering trade-off} for LLM-based extraction. Reynolds and McDonell~\cite{reynolds2021prompt} and Liu et al.~\cite{liu2023pretrain} showed that the same model, given different but reasonable instructions, can return outputs that differ by an order of magnitude in volume and meaning. The pattern observed in Section~5 is consistent with this body of work, where a strict prompt returned zero growth opportunities, a medium prompt returned 5, and a radical prompt returned 192. It also motivates the methodological choice in Section~6 to keep the medium prompt and instead change the structure of the input data, rather than continuing to relax the prompt and accept the noise that comes with it.
 
 \subsection{Enterprise vs. Open Source Topology}
-The structural difference between corporate and open source collaboration is the most directly studied of the three areas, but it has not previously been framed as a constraint on what an AI can detect. Crowston and Howison~\cite{crowston2005social} and Jergensen, Sarma, and Wagstrom~\cite{jergensen2011onion} described open source communities using ``onion'' or core-periphery models, a small group of long-term maintainers surrounded by larger rings of occasional and one-time contributors. Bird et al.~\cite{bird2008latent} showed that the resulting interaction graphs have heavy-tailed degree distributions and very low overall density, with most contributors only connected to the project through a single maintainer. Tsay, Dabbish, and Herbsleb~\cite{tsay2014influence} confirmed the same pattern on GitHub and added that pull-request decisions are strongly influenced by prior social ties, which means the few dense pockets that do exist are also the places where genuine developmental feedback is most likely to happen.
+The structural difference between corporate and open source collaboration is the most directly studied of the three areas, but it has not previously been framed as a constraint on what an AI-based coaching system can recover. Crowston and Howison~\cite{crowston2005social} and Jergensen, Sarma, and Wagstrom~\cite{jergensen2011onion} described open source communities using ``onion'' or core-periphery models, a small group of long-term maintainers surrounded by larger rings of occasional and one-time contributors. Bird et al.~\cite{bird2008latent} showed that the resulting interaction graphs have heavy-tailed degree distributions and very low overall density, with most contributors only connected to the project through a single maintainer. Tsay, Dabbish, and Herbsleb~\cite{tsay2014influence} found the same pattern on GitHub and added that pull-request decisions are strongly influenced by prior social ties, which suggests that the few dense pockets that do exist may also be the places where genuine developmental feedback is most likely to happen.
 
-Corporate engineering teams sit at the other end of this spectrum. Studies of internal Microsoft, Google, and IBM repositories~\cite{bird2011dont,sadowski2018modern} report code-review interaction densities roughly an order of magnitude higher than comparable open source projects, with the same reviewer-author pairs recurring over weeks and months. This is the topology the ClarityLoop engine was built for: repeated interactions between the same people, where a reviewer can see a behavioural pattern develop across multiple exchanges with the same recipient. In a graph with 1.1\% density, which was the measured value for the Pandas baseline in Section~4, the chance of any pair interacting more than once is essentially zero, so a coaching prompt that requires recurring patterns will correctly return nothing.
+Corporate engineering teams sit at the other end of this spectrum. Studies of internal Microsoft, Google, and IBM repositories~\cite{bird2011dont,sadowski2018modern} report code-review interaction densities roughly an order of magnitude higher than comparable open source projects, with the same reviewer-author pairs recurring over weeks and months. This is the topology for which the ClarityLoop engine was built: repeated interactions between the same people, where a reviewer can see a behavioural pattern develop across multiple exchanges with the same recipient. In a graph with 1.1\% density, which was the measured value for the Pandas baseline in Section~4, the chance of any pair interacting more than once is very low, so a coaching prompt that requires recurring patterns may reasonably return nothing.
 
 The methodological response used in this study comes from classical graph mining. K-Core decomposition~\cite{seidman1983network,batagelj2011fast} finds the largest subgraph in which every node has at least $k$ neighbours, and is a standard way to pull a stable core out of a noisy contributor graph. Kalliamvakou et al.~\cite{kalliamvakou2014promises,kalliamvakou2016indepth}, in their widely cited ``promises and perils of mining GitHub'' papers, explicitly warn that whole-repository statistics mix the dense maintainer core with the sparse drive-by periphery, and recommend topological filtering before any behavioural analysis. The ``artificial density'' approach used in Section~6, which applies K-Core to recover a 35--75\% dense subgraph from the Kubernetes repository, is a direct application of this advice to the enterprise-AI evaluation setting.
 
-A final relevant constraint comes from the LLM literature itself. Liu et al.~\cite{liu2024lost} documented the ``Lost in the Middle'' effect, where transformer models retrieve information reliably from the start and end of a long context but lose accuracy on content placed in the middle. This matters for CollabSense because successful densification produces, by design, very long per-user histories: the engineered Kubernetes core team contained individuals with tens of thousands of comments. The same structural fix that solves the sparsity problem therefore creates a context-length problem, which Section~8 discusses and which Section~9 proposes to address through chronological chunking.
+A final relevant constraint comes from the LLM literature itself. Liu et al.~\cite{liu2024lost} documented the ``Lost in the Middle'' effect, where transformer models retrieve information reliably from the start and end of a long context but lose accuracy on middle content. This matters for CollabSense because successful densification produces very long per-user histories: the engineered Kubernetes core team contained individuals with tens of thousands of comments. The same structural fix that addresses sparsity therefore creates a context-length problem, discussed in Section~8 and addressed through chronological chunking proposed in Section~9.
 
-Taken together, the three areas of prior work map out a clear gap. Sentiment analysis on software text has matured to the point where domain-aware models can be trusted on developer communication, but their stability under prompt variation has not been studied in any detail. Automated feedback work has produced strong defect and intent classifiers, but has not connected those outputs to recurring behavioural patterns at the individual level. Network analysis of open source has long known that these graphs are sparse, but has not framed sparsity as something that gates what an enterprise-tuned coaching AI can detect in the first place. CollabSense addresses this gap by treating data topology, prompt sensitivity, and AI fairness as a single connected evaluation problem.
+Taken together, these three areas provide relevant foundations but leave a specific gap. Sentiment analysis on software text has matured, yet model stability under prompt variation remains understudied. Automated feedback work has produced strong defect and intent classifiers without connecting outputs to recurring behavioural patterns at the individual level. Network analysis of open source has long recognised graph sparsity without framing it as a constraint on what an enterprise-tuned coaching AI can detect. This study addresses that gap by treating data topology, prompt sensitivity, and AI fairness as a single connected evaluation problem.
 
 \section{Methodology \& Data Engineering}
-The methodology for this study required building a custom Python data pipeline (\texttt{clarityloop/collabsense/src}) to extract, filter, and transform public GitHub interactions into a format that the ClarityLoop engine could process.
-
-Because the AI is designed to analyse internal corporate communications, feeding it raw open source data directly would not yield accurate results. The pipeline was broken into three main stages: asynchronous data mining using the GitHub API, logic-based filtering to isolate valuable interactions, and data anonymisation to simulate a corporate environment.
+The methodology for this study required building a custom Python data pipeline (\texttt{clarityloop/\allowbreak collabsense/\allowbreak src}) to extract, filter, and transform public GitHub interactions into a format that the ClarityLoop engine could process. Because the AI is designed to analyse internal corporate communications, processing unfiltered open source data may not produce meaningful results. We therefore organised the pipeline into three stages: asynchronous data mining using the GitHub API, logic-based filtering to isolate valuable interactions, and data anonymisation to simulate a corporate environment.
 
 \subsection{Dataset Selection}
-Two major open source repositories were selected for this study: \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes}. These projects were chosen because of their massive scale, strict professional review standards, and highly active maintainer communities. These characteristics make them the closest available public proxy to a large, professional software engineering department.
+Two major open source repositories were selected for this study: \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes}. These projects were chosen for their large scale, strict professional review standards, and highly active maintainer communities, making them the closest available public proxy to a large, professional software engineering department.
 
 \textbf{Filtering for Quality.}
-To ensure the AI was evaluating meaningful peer-to-peer feedback, strict filters were applied during the data ingestion phase:
+To ensure the analysis focused on meaningful peer-to-peer feedback, strict filters were applied during the data ingestion phase:
 \begin{itemize}
-	\item \textbf{Bot Removal:} Open source repositories rely heavily on automation. The pipeline stripped out all interactions from known bots (e.g., accounts containing \texttt{[bot]}, \texttt{-bot}, or \texttt{bot-}) to guarantee the AI only analysed human behaviour.
-	\item \textbf{Long-Term Contributor Focus:} To replicate the dynamics of permanent employees, we implemented tenure and activity filters. For the baseline Pandas dataset, we filtered for users who had been consistently active over extended periods (ranging from 6 months up to 5 consecutive years, depending on the test) and who met minimum thresholds for participating in pull requests and issues. This effectively removed one-time ``drive-by'' contributors, leaving only the core community.
+	\item \textbf{Bot Removal:} Open source repositories rely heavily on automation. The pipeline stripped out all interactions from known bots (e.g., accounts containing \texttt{[bot]}, \texttt{-bot}, or \texttt{bot-}) to ensure the analysis was restricted to human-authored contributions.
+	\item \textbf{Long-Term Contributor Focus:} To replicate the dynamics of permanent employees, we implemented tenure and activity filters. For the baseline Pandas dataset, we filtered for users who had been consistently active over extended periods (ranging from 6 months up to 5 consecutive years, depending on the test) and who met minimum thresholds for participating in pull requests and issues. This removed one-time ``drive-by'' contributors, leaving only the core community.
 \end{itemize}
 
 \textbf{Anonymisation and Workspace Simulation.}
-To adapt the public GitHub data to the engine's expected input format, an anonymisation module was built using the Python \texttt{Faker} library.
-
-This module systematically replaced all real GitHub usernames and public identities with synthetic profiles. It generated realistic fake names, corporate email addresses, user roles, and profile avatars. By mapping the filtered GitHub pull requests and comments to these synthetic profiles, we successfully generated clean, relational datasets (\texttt{users.csv}, \texttt{contexts.csv}, and \texttt{context\_comments.csv}) that  mirrored the structure expected for an enterprise workspace. This allowed the engine to process the open source data as it would for a corporate client.
+To adapt the public GitHub data to the engine's expected input format, we built an anonymisation module using the Python \texttt{Faker} library. This module replaced GitHub usernames and public identities with synthetic profiles like fake names, corporate email addresses, and user roles, producing structured datasets (\texttt{users.csv}, \texttt{contexts.csv}, and \texttt{context\_comments.csv}) that mirrored the structure expected for an enterprise workspace.
 
 \subsection{Summary of Tests}
-To isolate the variables of data structure and AI sensitivity (prompt engineering), the filtered data was processed through the ClarityLoop engine across several distinct experimental configurations. These configurations are referred to throughout the results:
+To isolate the variables of data structure and AI sensitivity (prompt engineering), we processed the filtered data through the ClarityLoop engine across several distinct experimental configurations, summarised in Table~\ref{tab:experiments}. These configurations are referred to throughout the results:
 \begin{itemize}
 	\item \textbf{Pandas\_ShortTerm} \& \textbf{Pandas\_LongTerm}: The baseline tests using the engine's default, strict enterprise coaching prompt. \textit{LongTerm} represents the core dataset of 5-year consistent contributors.
-	\item \textbf{Pandas\_Prompt\_A\_Individual} (Medium/Precision): A tuned prompt that bypassed the strict ``recurring pattern'' rule, allowing a single, high-quality piece of constructive feedback to trigger a Growth Opportunity.
-	\item \textbf{Pandas\_Prompt\_B\_Radical} (High Recall): A highly relaxed ``stress test'' prompt that broadened the definition of a Growth Opportunity to capture almost any actionable critique.
+	\item \textbf{Pandas\_Prompt\_A\_Individual} (Medium/Precision): A tuned prompt that relaxed the strict ``recurring pattern'' rule, allowing a single, high-quality piece of constructive feedback to trigger a Growth Opportunity.
+	\item \textbf{Pandas\_Prompt\_B\_Radical} (High Recall): A deliberately relaxed prompt that broadened the definition of a Growth Opportunity to capture almost any actionable critique.
 	\item \textbf{K8s\_Artificial\_Dense}: The Kubernetes dataset engineered using K-Core to simulate an enterprise team, processed using the balanced ``Medium/Precision'' prompt.
 	\item \textbf{K8s\_Strict\_Large}: A higher-density Kubernetes subset that ultimately highlighted context window saturation limits (discussed in Section~9).
 \end{itemize}
 
-\begin{table*}[!tbp]
+\begin{table}[!tbp]
 \centering
 \caption{Summary of experimental runs across prompt and density configurations. \textit{Raw Input}: context comments ingested after scraping and filtering. \textit{Scored}: comments individually evaluated for sentiment by the engine.}
 \label{tab:experiments}
-\begin{tabular}{lrrrrrr}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-\textbf{Experiment / Test ID} & \textbf{Raw Input} & \textbf{Reviewers} & \textbf{Recipients} & \textbf{Scored} & \textbf{Strengths} & \textbf{Growth Opps} \\
+\textbf{Test ID} & \textbf{Raw} & \textbf{Rev.} & \textbf{Recip.} & \textbf{Scored} & \textbf{Str.} & \textbf{GOs} \\
 \midrule
 Pandas\_ShortTerm              &  1{,}424 &  5 &  15 &   32 &   6 &   0 \\
 Pandas\_LongTerm               & 17{,}063 & 63 & 194 & 1162 & 120 &   0 \\
@@ -135,24 +140,24 @@ K8s\_Artificial\_Dense         & 28{,}571 & 48 &  17 &   87 &  12 &   4 \\
 K8s\_Strict\_Large             & 10{,}084 & 79 &  36 &  328 &  52 &   4 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
-\section{Baseline Success \& The Sparsity Challenge}
-The first dataset for the ClarityLoop engine test using real data was processed from the \texttt{pandas-dev/pandas} repository. This baseline test aimed to show if the AI could analyse open source technical discussions and extract meaningful insights using its default settings. The results demonstrated both a clear success in recognising positive collaboration, and a limitation for the growth opportunity signal.
+\section{Baseline Evaluation and Interaction Sparsity}
+The first dataset was processed from the \texttt{pandas-dev/pandas} repository. This baseline test examined whether the AI could analyse open source technical discussions and extract meaningful insights using its default settings.
 
 \subsection{Validating Soft-Skill Extraction}
-From a raw input of 17,063 filtered context comments, the engine scored 1,162 across 63 unique reviewers in the baseline test. From this data, it generated 120 distinct Strengths, a 10.3\% yield rate. This high volume of positive reinforcement confirms that the tuned AI is fully capable of understanding the context and intent of open source code reviews.
+From a raw input of 17,063 filtered context comments, the engine scored 1,162 across 63 unique reviewers in the baseline test. From this data, it generated 120 distinct Strengths, a 10.3\% yield rate. This volume of positive reinforcement suggests that the engine can identify the context and intent of open source code reviews.
 
-More importantly, rather than just extracting technical programming keywords, the engine accurately identified high-level soft skills. As shown in Figure~\ref{fig:strengths-volume}, this baseline run produced the highest volume of positive signals across all experiments.
+More importantly, rather than just extracting technical programming keywords, the engine identified high-level soft skills. As shown in Figure~\ref{fig:strengths-volume}, this baseline run produced the highest volume of positive signals across all experiments.
 
-\begin{figure*}[!tbp]
+\begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{total_strengths_volume.png}
 \caption{Total Strengths generated across all experimental runs.}
 \label{fig:strengths-volume}
-\end{figure*}
+\end{figure}
 
-Breaking down these signals further, Table~\ref{tab:top-strengths} shows that the engine successfully identified leadership and teamwork behaviours. The most frequent positive traits flagged were ``Engages in collaborative problem-solving'' (19 occurrences), ``Proposes practical solutions'' (7 occurrences), and ``Proactively seeks feedback'' (7 occurrences). This validates the model's core comprehension abilities in non-corporate environments.
+Breaking down these signals further, Table~\ref{tab:top-strengths} shows that the engine identified leadership and teamwork behaviours. The most frequent positive traits flagged were ``Engages in collaborative problem-solving'' (19 occurrences), ``Proposes practical solutions'' (7 occurrences), and ``Proactively seeks feedback'' (7 occurrences). This suggests the model can distinguish behavioural signals in non-corporate settings.
 
 \begin{table}[!tbp]
 \centering
@@ -170,49 +175,47 @@ Breaking down these signals further, Table~\ref{tab:top-strengths} shows that th
 \end{table}
 
 \subsection{The Missing Growth Opportunities}
-While the engine successfully extracted positive traits in the baseline \texttt{Pandas\_LongTerm} run, it failed to generate any actionable Growth Opportunities (0 yield). Further analysis of the network topology of interactions between users revealed a flaw outside of a simple failure of comprehension.
+While the engine successfully extracted positive traits in the baseline \texttt{Pandas\_LongTerm} run, it failed to generate any Growth Opportunities (0 yield). Further analysis of the network topology suggested a structural limitation beyond simple comprehension failure.
 
-The standard ClarityLoop engine is tuned for enterprise environments. Its logic demands that actionable coaching advice only be generated when ``recurring behavioural patterns'' are identified across multiple interactions from the same peer group. This prevents the AI from flagging one-off misunderstandings as a mistake a user should grow from.
+The standard ClarityLoop engine is tuned for enterprise environments, generating coaching advice only when ``recurring behavioural patterns'' are identified across multiple interactions from the same peer group. This prevents the AI from flagging one-off misunderstandings as developmental issues.
 
-Network analysis revealed the Pandas dataset had an interaction density of just 1.1\% (the ratio of actual peer-to-peer interactions out of all possible user pairings). In this sparse, transactional environment, meeting the ``recurring pattern'' requirement is statistically impossible. The AI correctly recognised the lack of sustained coaching, resulting in a zero yield.
+Network analysis revealed the Pandas dataset had an interaction density of just 1.1\% (the ratio of actual peer-to-peer interactions out of all possible user pairings). In this sparse, transactional environment, meeting the ``recurring pattern'' requirement is statistically implausible. The system therefore produced a zero yield.
 
 Changing the AI's prompt (Section~5) or changing the data structure itself (Section~6) became the primary focus of the subsequent tests.
 
 \section{Prompt Sensitivity \& Signal Quality}
-Rather than immediately undertaking data engineering to fix the 1.1\% network sparsity, the first approach was to test if the limitation could be bypassed entirely via prompt engineering. The objective was to determine if the ClarityLoop engine \textit{could} generate growth opportunities from sparse open source data if the strict ``recurring patterns'' requirement was removed.
-
-Two new configurations were tested on the same 17,063-comment LongTerm dataset: a ``Medium/Precision'' prompt (\texttt{Pandas\_Prompt\_A\_Individual}), which allowed a single high-quality piece of constructive feedback to trigger an insight, and a ``High Recall'' prompt (\texttt{Pandas\_Prompt\_B\_Radical}), which broadened the definition of growth to include almost any actionable improvement.
+Rather than immediately undertaking data engineering to address the 1.1\% network sparsity, we first tested whether prompt engineering could bypass the limitation. Two new configurations were tested on the same 17,063-comment LongTerm dataset: a ``Medium/Precision'' prompt (\texttt{Pandas\_Prompt\_A\_Individual}), which allowed a single high-quality piece of constructive feedback to trigger an insight, and a ``High Recall'' prompt (\texttt{Pandas\_Prompt\_B\_Radical}), which broadened the definition of growth to include almost any actionable improvement.
 
 \subsection{Precision vs. Recall (Medium vs. Radical)}
-Relaxing the prompt parameters immediately solved the zero-yield problem. As shown in Figure~\ref{fig:signal-intensity}, both modified prompts successfully forced the AI to generate Growth Opportunities from the sparse open source data.
+Relaxing the prompt parameters eliminated the zero-yield outcome. As shown in Figure~\ref{fig:signal-intensity}, both modified prompts enabled the engine to produce Growth Opportunities from the sparse open source data.
 
-\begin{figure*}[!tbp]
+\begin{figure}[!tbp]
 \centering
 \includegraphics[width=\textwidth]{signal_intensity_scatter.png}
 \caption{Signal intensity scatter across prompt configurations.}
 \label{fig:signal-intensity}
-\end{figure*}
+\end{figure}
 
-The \texttt{Pandas\_Prompt\_A\_Individual} (Medium/Precision) run processed 479 comments and generated 5 high-quality Growth Opportunities (a conservative 1\% yield). This configuration acted much like a thoughtful peer review, ensuring the advice remained strategic.
+The \texttt{Pandas\_Prompt\_A\_Individual} (Medium/Precision) run processed 479 comments and generated 5 high-quality Growth Opportunities (a conservative 1\% yield). This configuration acted much like a thoughtful peer review, helping the advice remain strategic.
 
-Conversely, the \texttt{Pandas\_Prompt\_B\_Radical} (High Recall) run acted as a stress test for the engine's capabilities. It processed 1,226 comments and identified 192 Growth Opportunities, achieving a massive 15.6\% yield rate. This proved definitively that the AI possesses the deep comprehension necessary to identify critiques in technical text, provided the prompt threshold is lowered sufficiently.
+Conversely, the \texttt{Pandas\_Prompt\_B\_Radical} (High Recall) run served as a high-recall sensitivity test for the engine's capabilities. It processed 1,226 comments and identified 192 Growth Opportunities, yielding a substantially higher 15.6\% rate. This indicates that the engine can extract critique-like signals from technical text when the prompt threshold is lowered.
 
 \subsection{The ``Nitpick'' Problem}
 While the \texttt{Pandas\_Prompt\_B\_Radical} configuration successfully generated a high volume of Growth Opportunities, a qualitative review showed a large gap in the nature of the feedback. The engine often confused transactional code corrections with behavioural coaching.
 
-Because the threshold for a growth opportunity was so low, the AI frequently flagged surface-level development comments, such as ``Clarify API documentation for public exposure'' or requests for shorter bug reports, as personal Growth Opportunities. While accurate to the text, these are standard open source nitpicks and code-review tasks, not developmental soft-skill coaching.
+Because the threshold was so low, the AI frequently flagged surface-level development comments as personal Growth Opportunities, such as ``Clarify API documentation for public exposure'' or requests for shorter bug reports. These are standard open source nitpicks, not developmental soft-skill coaching.
 
-This establishes a clear trade-off: forcing the AI to find feedback in a sparse network via highly relaxed prompts introduces unacceptable noise. It proves that the engine requires a balanced, ``Medium'' prompt to filter for quality, meaning the underlying network density itself of the open source data must be fixed to generate results that are realistic in terms of simulating an enterprise environment.
+This suggests a trade-off: enabling the engine to find feedback in a sparse network via highly relaxed prompts introduces substantial noise. These results suggest that the engine requires a balanced, ``Medium'' prompt to filter for quality, meaning the underlying network density of the open source data must be fixed to generate results that are realistic in terms of simulating an enterprise environment.
 
 \section{Kubernetes Dataset Results}
-Because relaxing the AI's prompt (Section~5) led to unacceptable noise and surface-level nitpicks, it was clear that the engine's strict coaching standards needed to be maintained. Therefore, the best path forward was to address the root cause of the problem: the 1.1\% network sparsity. If open source collaboration is naturally too sparse to trigger behavioural patterns, we needed to artificially engineer an enterprise-level interaction density.
+Because relaxing the AI's prompt (Section~5) introduced substantial noise, the remaining approach was to address the root cause: the 1.1\% network sparsity. If open source collaboration is naturally too sparse to trigger behavioural patterns, the interaction density must be artificially engineered to enterprise levels.
 
 \textbf{K-Core Decomposition \& The Ingestion Error.}
-To achieve this, the focus shifted to the massive Kubernetes repository. We applied K-Core decomposition~\cite{seidman1983network,batagelj2011fast}, a graph theory algorithm that identifies the densest subgraph of frequent collaborators, or a "core team". Simply downloading the entire comment history for these core maintainers inadvertently pulled in thousands of one-off interactions with people outside of the identified core team, diluting the dataset to a 0.2\% density of interactions between all commenters.
+To achieve this, the focus shifted to the large-scale Kubernetes repository. We applied K-Core decomposition~\cite{seidman1983network,batagelj2011fast}, a graph theory algorithm that identifies the densest subgraph of frequent collaborators. Simply downloading the entire comment history for these core maintainers inadvertently pulled in thousands of one-off interactions with outsiders, diluting the dataset to 0.2\% density.
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{network_density_graph.png}
+\includegraphics[width=\textwidth]{network_density_graph.png}
 \caption{Network density before applying the strict peer-to-peer filter.}
 \label{fig:network-density}
 \end{figure}
@@ -220,109 +223,151 @@ To achieve this, the focus shifted to the massive Kubernetes repository. We appl
 \textbf{The Strict Peer-to-Peer Filter.}
 To solve this dilution, a strict peer-to-peer allow-list was implemented. The data pipeline was modified to delete any comment where either the sender or the recipient was outside the identified core group.
 
-This stripped away the transactional noise, revealing a highly interconnected subset of up to 55 core maintainers. By artificially engineering these datasets to achieve internal densities ranging from 35\% to 75\% (depending on the amount of comments wanted), the pipeline successfully replicated the dense communication patterns of a structured corporate engineering department.
+This stripped away the transactional noise, revealing a highly interconnected subset of up to 55 core maintainers. By engineering these datasets to achieve internal densities of 35--75\% (depending on comments retained), the pipeline replicated the dense communication patterns of a corporate engineering department.
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{core_team_graph.png}
+\includegraphics[width=\textwidth]{core_team_graph.png}
 \caption{Core team interaction graph after strict peer-to-peer filtering.}
 \label{fig:core-team}
 \end{figure}
 
-\subsection{Unlocking Growth Opportunities Through Density}
-With a high-density dataset successfully engineered, the data was processed through the ClarityLoop engine. Crucially, this was run using the balanced ``Medium/Precision'' prompt. This ensured the AI maintained its strict developmental standards and did not revert to the nitpick behaviour seen in Section~5.
+\subsection{Generating Growth Opportunities Through Density}
+With a high-density dataset constructed, we processed it through the ClarityLoop engine using the balanced ``Medium/Precision'' prompt to ensure the AI maintained strict developmental standards.
 
-The results confirmed that density, not prompt relaxation, was the missing variable. In the \texttt{K8s\_Artificial\_Dense} run, the engine scored 87 high-density peer-to-peer comments and generated 4 highly accurate Growth Opportunities, achieving a healthy 4.6\% yield.
+The results suggested that density, not prompt relaxation, was the missing variable. In the \texttt{K8s\_Artificial\_Dense} run, the engine scored 87 high-density peer-to-peer comments and generated 4 more relevant Growth Opportunities, a 4.6\% yield.
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{k8_network_graph.png}
+\includegraphics[width=\textwidth]{k8_network_graph.png}
 \caption{Engineered Kubernetes core team network: hub-and-spoke clusters.}
 \label{fig:k8-network}
 \end{figure}
 
-Rather than a single uniform web, the graph forms distinct hub-and-spoke clusters. A few central maintainers act as hubs, repeatedly interacting with specific subgroups of contributors. This locally dense structure mimics the manager-and-direct-reports dynamic of a traditional enterprise department. Because the AI requires recurring feedback between the same individuals to trigger a coaching insight, these isolated, high-interaction clusters provided the exact environment needed to generate the Growth Opportunities.
+Rather than a single uniform web, the graph forms distinct hub-and-spoke clusters, where central maintainers repeatedly interact with specific subgroups. This locally dense structure mimics the manager-and-direct-reports dynamic of an enterprise department, providing the recurring peer interactions the AI requires to trigger coaching insights.
 
-The \texttt{K8s\_Strict\_Large} run saw similar success, scoring 328 comments from a 10,084-comment input and generating 4 Growth Opportunities (1.2\% yield).
+The \texttt{K8s\_Strict\_Large} run produced comparable results, scoring 328 comments from a 10,084-comment input and generating 4 Growth Opportunities (1.2\% yield).
 
-Unlike the transactional feedback generated by the Radical prompt, the Growth Opportunities generated here were strategic and developmental (e.g., identifying patterns of premature PR approvals). This outcome proves that the ClarityLoop engine is fully capable of extracting complex, behavioural coaching signals from open source technical data. However, it requires both a properly tuned prompt \textit{and} an interaction graph that artificially mirrors the dense, recurring relationships of a corporate department.
+Unlike the transactional feedback generated by the Radical prompt, these Growth Opportunities were strategic and developmental (e.g., identifying patterns of premature PR approvals). These results suggest that the ClarityLoop engine can extract behavioural coaching signals from OSS data when both prompt and density are adjusted, but requires a properly tuned prompt \textit{and} an interaction graph that mirrors the dense, recurring relationships of a corporate department.
+
+\subsection{Preliminary Manual Assessment of Growth Opportunities}
+To obtain an initial check on whether the engine's Growth Opportunity labels were plausible, two reviewers independently assessed a stratified random sample of 20 generated items drawn proportionally from all experimental configurations that produced Growth Opportunities. For each item, the reviewer read the original GitHub comment and judged the engine's output against three criteria: (1)~whether the feedback was \textit{actionable}, (2)~whether it identified a \textit{genuine improvement area} rather than normal interaction, and (3)~whether the label was \textit{supported by the comment content}. Each criterion was rated Yes, Partial, or~No.
+
+The two reviewers agreed on 52 of 60 individual judgments (87\%). Cohen's $\kappa$ was 0.68 for actionable feedback, 0.68 for genuine improvement area, and 0.90 for evidence support, yielding an overall $\kappa = 0.76$ (substantial agreement). All seven disagreements fell on the Yes/Partial boundary rather than Yes/No, indicating that the reviewers agreed on the direction of their assessments but occasionally differed on degree. Table~\ref{tab:manual-validation} reports consensus ratings (the more conservative rating where reviewers disagreed).
+
+\begin{table}[!tbp]
+\centering
+\caption{Consensus ratings from manual assessment of 20 sampled Growth Opportunities (two reviewers, Cohen's $\kappa = 0.76$).}
+\label{tab:manual-validation}
+\begin{tabular}{lcccr}
+\toprule
+\textbf{Criterion} & \textbf{Yes} & \textbf{Partial} & \textbf{No} & \textbf{$\geq$Partial} \\
+\midrule
+Actionable feedback      & 13 (65\%) & 4 (20\%) & 3 (15\%) & 17/20 (85\%) \\
+Genuine improvement area &  6 (30\%) & 11 (55\%) & 3 (15\%) & 17/20 (85\%) \\
+Supported by evidence    & 12 (60\%) &  6 (30\%) & 2 (10\%) & 18/20 (90\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+As shown in Table~\ref{tab:manual-validation}, 85\% of the sampled opportunities were judged at least partially actionable, and 90\% were at least partially supported by the source comment. The ``genuine improvement'' criterion was the most conservatively rated, with 30\% receiving a full Yes, reflecting the difficulty of distinguishing developmental coaching from routine code-review interaction.
+
+To illustrate how the engine identifies coaching signals, three unanimously validated examples (Yes on all three criteria from both reviewers) are presented:
+\begin{itemize}
+	\item \textbf{``Avoid premature assignment of approvers''} (\texttt{K8s}, LongTerm): From a comment directing a contributor to stop assigning approvers before receiving any LGTM. The engine correctly identified a recurring process-compliance gap rather than a one-off correction.
+	\item \textbf{``Improve code freeze awareness''} (\texttt{K8s\_Strict\_Large}): From a release manager's comment asking whether an issue was still in scope for v1.13 with code slush approaching. The engine surfaced a project-management coaching signal about release deadline awareness.
+	\item \textbf{``Include reproducible examples in bug reports''} (\texttt{Pandas\_Prompt\_B\_Radical}): From repeated maintainer comments asking contributors to provide copy-pastable examples rather than external file attachments. The engine aggregated multiple interactions to identify a communication-quality pattern.
+\end{itemize}
+
+One reviewer provided qualitative notes for each item; representative observations of failure cases included that the engine sometimes confused transactional process feedback with behavioural coaching (e.g., a ``communicate changes in PR relevance'' label applied to a superseded-work situation rather than a genuine communication gap) and occasionally produced correct labels at the wrong level of specificity (e.g., labelling ``use permalinks'' when the broader issue was providing reproducible examples).
+
+Breaking down by experimental configuration, the 14 items drawn from the \texttt{Pandas\_Prom\-pt\_B\_Radical} run were rated at least partially actionable and evidence-supported in 13 of 14 cases each, though only 6 of 14 were rated as fully genuine improvement areas under consensus, consistent with the ``nitpick'' problem discussed in Section~5.2. The four items rated No on at least one criterion came from three different configurations (\texttt{Radical}, \texttt{K8s\_Strict\_Large}, and \texttt{Prompt\_A\_Individual}), suggesting that misclassification is not concentrated in a single run. Reviewer notes identified three recurring failure modes: misinterpreting active debugging as a developmental need, attributing feedback to the wrong participant in multi-party threads, and confusing superseded work with a communication gap.
+
+This assessment should be interpreted as a preliminary plausibility check. Both reviewers were co-authors, which may introduce favourable interpretation bias. A full validation with independent external annotators remains necessary future work.
 
 \section{Quantitative Insights \& AI Stability}
-While Sections~4 through~6 focused on the structural challenges of generating Growth Opportunities, the ClarityLoop engine processes much more than just critiques. It constantly maps the underlying sentiment and soft-skill strengths of the team.
-
-To assess whether the engine would be reliable for future enterprise deployment, a quantitative analysis was performed on the \texttt{feedback\_scores.csv} dataset (containing over 3,300 unique scored interactions) to verify that the AI remains fair, objective, and unbiased, regardless of the prompt or data density.
+The ClarityLoop engine also maps the underlying sentiment and soft-skill strengths of the team. To assess scoring reliability, we performed a quantitative analysis on the \texttt{feedback\_scores.csv} dataset (over 3,300 unique scored interactions) examining whether scoring remained fair and stable across prompt and data-density conditions.
 
 \subsection{The Overall Sentiment Landscape}
 A common concern with applying AI to open source or highly technical text is that the model might misinterpret direct, blunt code reviews as toxic or negative.
 
-An analysis of the entire dataset's sentiment scores refutes this. As shown in the distribution below, the overall mean sentiment score across all open source interactions analysed was \textbf{6.63 out of 10}. The distribution forms a healthy bell curve heavily weighted toward the constructive/neutral (6) and positive/praising (8) ranges, with very few scores falling into the negative (0--3) range.
+An analysis of the entire dataset's sentiment scores does not support this concern. The overall mean sentiment score was \textbf{6.63 out of 10}, with the distribution forming a bell curve weighted toward the constructive/neutral (6) and positive/praising (8) ranges and very few scores in the negative (0--3) range.
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{overall_sentiment_distribution.png}
+\includegraphics[width=\textwidth]{overall_sentiment_distribution.png}
 \caption{Overall sentiment score distribution across all analysed interactions.}
 \label{fig:sentiment-dist}
 \end{figure}
 
-This confirms that the AI accurately comprehends the professional, transactional nature of engineering collaboration without hallucinating negativity, which is a known failure mode of general-purpose sentiment tools on developer text~\cite{jongeling2017negative}.
+This suggests that the model captured the predominantly professional, transactional nature of the interactions without hallucinating negativity, which is a known failure mode of general-purpose sentiment tools on developer text~\cite{jongeling2017negative}.
 
 \subsection{AI Fairness \& Bias Checks}
-To definitively prove the stability and fairness of the AI, three distinct bias checks were conducted across the experimental runs.
+To assess the stability and fairness of the scoring, three distinct bias checks were conducted across the experimental runs.
 
 \textbf{1) Execution Stability (The Consistency Check).}
-Throughout all experiments, the prompt used to generate Sentiment Scores remained the same; only the Growth Opportunity prompts were altered. However, because Large Language Models are inherently non-deterministic, it was crucial to verify that the engine produces consistent, reproducible scores across completely separate pipeline runs (e.g., comparing the \texttt{Pandas\_Prompt\_A\_Individual} run against the \texttt{Pandas\_Prompt\_B\_Radical} run).
+Throughout all experiments, the sentiment scoring prompt remained the same; only the Growth Opportunity prompts were altered. Because LLMs are inherently non-deterministic, we verified that the engine produces consistent scores across separate pipeline runs.
 \begin{itemize}
 	\item \textit{Boxplot Analysis:} The interquartile ranges of sentiment scores remained almost identical across all Baseline, Precision, and Radical runs.
-	\item \textit{The Delta Test:} By isolating the exact same comments analysed during different pipeline executions, we calculated the score delta. The mean difference in score was just $-0.05$. This proves the core AI evaluator is highly reliable and objective, consistently assigning the same score to the same text regardless of when the analysis is executed.
+	\item \textit{The Delta Test:} By isolating the exact same comments analysed during different pipeline executions, we calculated the score delta. The mean difference in score was just $-0.05$. This suggests the evaluator was relatively stable across repeated runs, consistently assigning nearly the same score to the same text regardless of when the analysis was executed.
 \end{itemize}
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{sentiment_box_plot.png}
+\includegraphics[width=\textwidth]{sentiment_box_plot.png}
 \caption{Sentiment score interquartile ranges across all runs.}
 \label{fig:sentiment-box}
 \end{figure}
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{delta_histogram.png}
+\includegraphics[width=\textwidth]{delta_histogram.png}
 \caption{Distribution of score deltas between matched comments across runs.}
 \label{fig:delta-hist}
 \end{figure}
 
 \textbf{2) Target Fairness (The Pareto Check).}
-In a corporate setting, an AI must not unfairly target a specific employee. A Pareto analysis was run on the high-volume Radical dataset to see how Growth Opportunities were distributed among the developers. The resulting curve closely tracked the line of perfect equality. This proves the AI does not single out specific individuals, and that critiques scale linearly and fairly with a user's total interaction volume.
+In a corporate setting, an AI must not unfairly target a specific employee. A Pareto analysis on the high-volume Radical dataset showed that Growth Opportunities closely tracked the line of perfect equality, suggesting critiques scaled linearly with a user's interaction volume rather than concentrating on a subset of individuals.
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=\columnwidth]{bias_check_pareto.png}
+\includegraphics[width=\textwidth]{bias_check_pareto.png}
 \caption{Pareto distribution of Growth Opportunities across users.}
 \label{fig:pareto}
 \end{figure}
 
 \textbf{3) Verbosity Bias Check.}
-Finally, Large Language Models often exhibit a verbosity bias, incorrectly assuming that longer text is inherently better or more thoughtful. A scatter plot mapping the character count of a comment against its AI-assigned Sentiment Score revealed a flat trendline. The AI assigns both high (9) and low (4) scores equally to 10-word responses and 1,000-word responses, proving it judges the context of the communication, not just the length.
+Finally, LLMs often exhibit a verbosity bias, assuming longer text is inherently better. A scatter plot mapping comment character count against AI-assigned Sentiment Score revealed a flat trendline: the AI assigns both high (9) and low (4) scores equally to short and long responses, suggesting scores were not associated with comment length.
 
 \section{Discussion: Context Saturation}
-Engineering artificial density successfully solved network sparsity, but it introduced a new LLM-specific bottleneck: \textbf{context saturation}. By packing months of highly active open source interactions into dense peer-to-peer graphs, the volume of historical text per user became massive. While recent upgrades to foundational LLM context windows have largely mitigated hard token limits, the challenge shifted from \textit{fitting} the data into the model to how the model \textit{processes} it.
+Engineering artificial density addressed the network sparsity constraint but introduced a new LLM-specific bottleneck: \textbf{context saturation}. Packing months of active interactions into dense peer-to-peer graphs made the per-user text volume substantial. While recent LLM context window upgrades have largely mitigated hard token limits, the challenge shifted from \textit{fitting} data into the model to how the model \textit{processes} it.
 
-Feeding an LLM a massive batch of history at once (e.g., 128k+ tokens) triggers the well-documented ``Lost in the Middle'' phenomenon~\cite{liu2024lost}, where models struggle to retain and cross-reference details buried in the centre of a prompt.
+Providing the LLM with a large volume of historical interaction data in a single prompt (e.g., 128k+ tokens) triggers the well-documented ``Lost in the Middle'' phenomenon~\cite{liu2024lost}, where models struggle to retain and cross-reference details buried in the centre of a prompt.
 
-For the ClarityLoop engine, this saturation may severely dilute behavioural signals, where subtle soft-skill coaching moments can be buried under tens of thousands of lines of highly technical noise (e.g., raw code snippets, JSON configurations). The AI would then become overwhelmed by the technical density and struggle to connect the dots across months of history. This context saturation could explain why the Growth Opportunity yield in the successful Kubernetes run remained relatively conservative (4.6\%), where it was expected to produce more; the patterns exist, but processing them in a single massive batch makes them difficult for the LLM to extract.
+For the ClarityLoop engine, this saturation may dilute behavioural signals, as subtle coaching moments can be buried under tens of thousands of lines of technical noise (e.g., raw code snippets, JSON configurations). This may help explain why the Growth Opportunity yield in the Kubernetes run remained conservative (4.6\%): the patterns exist, but processing them in a single large prompt may make them difficult for the LLM to extract.
+
+\section{Threats to Validity}
+
+\subsection{Construct Validity}
+Construct validity concerns whether our operational measures faithfully capture behavioural coaching. ``Strengths'' and ``Growth Opportunities'' are treated as proxies for coaching-relevant signals, but these are engine outputs rather than externally validated coaching constructs. A preliminary manual assessment of 20~sampled Growth Opportunities by two reviewers found 85\% at least partially actionable and 90\% at least partially evidence-supported, with substantial inter-rater agreement (Cohen's $\kappa = 0.76$; Section~6.2), providing initial evidence of face validity. However, both reviewers were co-authors, and independent external validation remains necessary to strengthen these claims.
+
+\subsection{Internal Validity}
+Internal validity concerns whether findings are shaped by methodological choices. Prompt sensitivity materially changed both the volume and type of outputs, as shown by the strict/medium/radical contrast; we mitigate this by reporting multiple conditions. LLM non-determinism may affect repeated runs; matched comments showed a mean score delta of $-0.05$, though this does not eliminate all variation. K-core decomposition, peer-to-peer filtering, and the ``nitpick'' vs.\ coaching distinction also involve researcher judgment.
+
+\subsection{External Validity}
+External validity concerns generalisability beyond the studied setting. We analyse two suitable repositories, although they may not represent other OSS projects with different review norms. More importantly, OSS collaboration is only a proxy for enterprise communication; artificially densified graphs might not mirror real workplace hierarchies or temporal rhythms. Because the evaluated engine is proprietary, independent replication may be constrained. We do not claim direct generalisation to enterprise deployment without further study.
 
 \section{Conclusion \& Future Work}
-This research definitively proves that the ClarityLoop AI engine possesses the complex comprehension capabilities required to function as an automated behavioural coach. When evaluating the highly technical environment of OSS development, the model demonstrated high accuracy. It correctly mapped the professional, constructive tone of the \texttt{pandas} and \texttt{kubernetes} communities (mean sentiment 6.63) without hallucinating negativity, and successfully identified thousands of positive soft skills and leadership traits.
+This study provides initial evidence that the ClarityLoop engine can recover sentiment and coaching-relevant signals from OSS collaboration data, though the findings remain contingent on prompt design, data topology, and the proxy nature of the dataset. The model mapped the constructive tone of the \texttt{pandas} and \texttt{kubernetes} communities (mean sentiment 6.63) without hallucinating negativity, and identified thousands of positive soft skills and leadership traits.
 
-Crucially, this study identified that the engine's failure to generate actionable Growth Opportunities on raw open source data was not an AI comprehension flaw, but a structural mismatch. The 1.1\% interaction sparsity of public repositories in their raw form simply did not contain the dense, recurring peer-to-peer relationships the enterprise-tuned AI requires to trigger a coaching insight.
+Crucially, the engine's failure to generate Growth Opportunities on raw open source data appears to reflect a structural mismatch rather than a comprehension flaw. The 1.1\% interaction sparsity of public repositories did not contain the dense, recurring peer-to-peer relationships the enterprise-tuned AI requires.
 
-By utilising K-Core decomposition and strict peer-filtering, we successfully engineered an artificial density subset (35\%+). When processed with a balanced ``Medium/Precision'' prompt, this dense data successfully triggered accurate, strategic Growth Opportunities (4.6\% yield). This confirms that the ClarityLoop engine's approach is viable and shows strong potential, provided the data topology mirrors the density of a traditional corporate department.
+By utilising K-Core decomposition and strict peer-filtering, we constructed an artificial density subset (35\%+). When processed with a balanced ``Medium/Precision'' prompt, this dense data triggered strategic Growth Opportunities (4.6\% yield), suggesting the approach warrants further evaluation in settings that more closely resemble the intended deployment environment.
 
-\subsection{Simulating Chronological Ingestion}
-Having solved the data engineering challenge of network sparsity, the final challenge was context saturation (Section~8). This saturation is an product of the experimental methodology itself, as we are forcing the LLM to process years of dense historical data in a single, monolithic batch.
+\subsection{Chronological Ingestion}
+Having addressed network sparsity, the remaining challenge is context saturation (Section~8). This is partly an artefact of the experimental methodology, which forces the LLM to process years of dense data in a single batch. In a live deployment, the engine would ingest communications incrementally (e.g., daily or weekly), potentially reducing saturation effects.
 
-In a live enterprise deployment, the ClarityLoop engine would naturally operate by ingesting and analysing communications incrementally (e.g., daily or weekly). Because it would evaluate smaller, time-bound slices of data as they arrive, the engine is theoretically positioned to avoid context window saturation in practice compared to the experimental methodology.
-
-Therefore, future work should focus on modifying the testing pipeline to accurately simulate a live production environment. By replaying the historical open source datasets to the engine in chronological chunks, we can evaluate how the AI naturally builds and cross-references recurring behavioural patterns over time. This approach will bypass the ``Lost in the Middle'' phenomenon, allowing us to accurately measure the engine's true yield of high-value coaching insights under real-world conditions.
+Future work should therefore modify the testing pipeline to simulate live ingestion by replaying historical datasets in chronological chunks, allowing the AI to build behavioural patterns over time. This may reduce the ``Lost in the Middle'' effect and better assess the observed yield under realistic conditions.
 
 \section*{Data Availability}
 The complete CollabSense pipeline, anonymised datasets, experimental configurations, and visualisation notebooks used in this study are publicly available at \url{https://github.com/clarityloop/collabsense}.
@@ -330,9 +375,6 @@ The complete CollabSense pipeline, anonymised datasets, experimental configurati
 \section*{Acknowledgment}
 The author thanks the ClarityLoop team for access to the CollabSense engine, and the maintainers of \texttt{pandas-dev/pandas} and \texttt{kubernetes/kubernetes} whose public collaboration history made this evaluation possible.
 
-\bibliographystyle{IEEEtran}
 \bibliography{references}
-
-\balance
 
 \end{document}

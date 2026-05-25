@@ -1,99 +1,30 @@
-# CollabSense Data Gathering
+# CollabSense
 
-Data pipeline used to scrape, process, and clean data from open-source GitHub repositories for the CollabSense research project.
+An empirical evaluation of the [ClarityLoop](https://clarityloop.com) AI engine on open source software collaboration data. This research investigates whether an enterprise-oriented behavioural coaching system can extract stable sentiment scores, individual strengths, and actionable growth opportunities from public GitHub interactions.
 
-Uses an asynchronous scraper with multi-token rate limit handling, a processing engine that generates specific datasets to be used by the clarityloop platform.
+## Overview
 
-## Project Structure
+CollabSense uses a custom data pipeline to scrape, filter, and anonymise public GitHub pull request and issue data, then processes it through the ClarityLoop engine across multiple experimental configurations varying prompt sensitivity and interaction graph density. The study evaluates the engine against data from **pandas-dev/pandas** and **kubernetes/kubernetes**.
+
+Key findings include:
+- Stable sentiment scoring across all configurations (mean 6.63/10)
+- Growth opportunities emerge when interaction density is engineered via K-Core decomposition
+- Manual validation by two reviewers found 85% of sampled growth opportunities at least partially actionable (Cohen's κ = 0.76)
+
+## Repository Structure
 
 ```text
-collab-sense-data-gathering/
-├── dataset/           # All compiled growth signal results
-├── reports/           # Results and pre-analysis datasets
-├── src/
-│   ├── scraper.py     # Async GitHub scraper with token rotation
-│   ├── processor.py   # Filtering logic & CSV generation (Standard & LTC)
-│   ├── cleaner.py     # Synthetic data generation
-│   ├── pipeline.py    # Main orchestrator for the workflow
-│   └── config.py      # Configuration settings (Repo, Thresholds, Paths)
-├── .env               # API Secrets (Not committed)
+collabsense/
+├── dataset/           # Compiled results (feedback scores, strengths, growth opportunities)
+├── reports/           # Paper LaTeX source and analysis outputs
+├── src/               # Data pipeline (scraper, processor, anonymiser)
 └── requirements.txt   # Python dependencies
 ```
 
-## Setup
+## Paper
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/clarityloop/collabsense.git
-    cd collabsense
-    ```
+The full paper is available at `reports/collabsense_paper_latex.tex`, targeting ESEM SEIP 2026 (Munich, October 4–9).
 
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Data Pipeline
 
-3.  **Configure Environment Variables:**
-    Create a `.env` file in the root directory. You must add at least one GitHub Personal Access Token (PAT).
-    
-    To bypass GitHub's rate limit (5,000 requests/hour), add multiple tokens. The scraper automatically manages and rotates them.
-
-    ```text
-    # .env file
-    GITHUB_TOKEN=ghp_yourPrimaryTokenHere...
-    
-    # Optional: Add more tokens for larger scrapes
-    GITHUB_TOKEN_1=ghp_secondaryTokenHere...
-    GITHUB_TOKEN_2=ghp_tertiaryTokenHere...
-    ```
-
-4.  **Configure Target & Thresholds:**
-    Open `src/config.py` to set the target repository and adjust filtering logic:
-    *   `OWNER` / `REPO`: The target GitHub repository.
-    *   `FILTER_...`: Thresholds for the Standard Dataset.
-    *   `LTC_...`: Thresholds for the Long-Term Contributor Dataset.
-
-## Usage
-
-The project is controlled via the **Pipeline Orchestrator** (`src/pipeline.py`), which handles directory management and workflow execution.
-
-### 1. Full "Start-to-Finish" Run
-Scrapes data, creates a timestamped folder, processes both datasets, and cleans/anonymizes the results.
-```bash
-python -m src.pipeline
-```
-*Output:* `data/{OWNER}-{REPO}_SCRAPE_{TIMESTAMP}/`
-
-### 2. Scraping Only
-Fetches raw data and saves it to a new folder without processing.
-```bash
-python -m src.pipeline --scrape
-```
-
-### 3. Processing Existing Data (Re-Run Experiments)
-If you already have a raw scrape file (`_FINAL.csv`) and want to re-run filters or generate new datasets without re-scraping:
-```bash
-python -m src.pipeline --process --clean --input-file data/path/to/existing_FINAL.csv
-```
-*Output:* Creates a **new** folder `data/{OWNER}-{REPO}_PROCESS_{TIMESTAMP}/` containing the new results.
-
-### 4. Cleaning Only
-To re-run the anonymization/cleaning logic on an existing folder:
-```bash
-python -m src.pipeline --clean --input-dir data/path/to/processed_folder
-```
-
-### Pipeline Arguments
-| Argument | Description |
-| :--- | :--- |
-| `--mode` | Which dataset logic to run: `standard`, `ltc`, or `all` (default). |
-| `--input-file` | Path to a raw CSV file (Required for `--process` only). |
-| `--input-dir` | Path to a folder (Required for `--clean` only). |
-
-## Output Files
-The pipeline generates 5 CSV files formatted for ClarityLoop ingestion:
-*   `users.csv`: Anonymized user profiles.
-*   `workspaces.csv`: Project metadata.
-*   `workspace_members.csv`: Workspace membership list.
-*   `contexts.csv`: Pull Requests and Issues (The "Cases").
-*   `context_comments.csv`: Feedback and discussion linked to contexts.
+To reproduce the data collection, install dependencies (`pip install -r requirements.txt`), configure GitHub tokens in a `.env` file, and run `python -m src.pipeline`. See `src/config.py` for target repository and filtering thresholds.
